@@ -1,0 +1,73 @@
+{
+  "values": [
+    {
+      "con": {
+        "lock": false,
+        "parity": "even",
+        "baudRate": 19200,
+        "dataBits": 8,
+        "stopBits": 1
+      },
+      "label": "schneider",
+      "device": "",
+      "interval": 13,
+      "meter_no": 2,
+      "meter_make": "SCHNEIDER",
+      "meter_name": "EM64XXH and PM1130H Meters",
+      "meter_type": "Hexa Series",
+      "meter_model": "EM6438H"
+    },
+    {
+      "con": {
+        "lock": false,
+        "parity": "even",
+        "baudRate": 19200,
+        "dataBits": 8,
+        "stopBits": 1
+      },
+      "label": "Elmeasure1",
+      "device": "",
+      "meter_no": 3,
+      "meter_make": "ELMEASURE",
+      "meter_name": "Demand Controllers",
+      "meter_type": "Energy Meter",
+      "meter_model": "PN 8700"
+    },
+    {
+      "con": {
+        "lock": false,
+        "parity": "none",
+        "baudRate": 9600,
+        "dataBits": 8,
+        "stopBits": 1
+      },
+      "label": "Meter 3",
+      "device": "",
+      "interval": 13,
+      "meter_no": 4,
+      "meter_make": "SECURE",
+      "meter_name": "",
+      "meter_type": "Multi-line three-phase panel meter",
+      "meter_model": "ELITE-440-443"
+    },
+    {
+      "con": {
+        "lock": false,
+        "parity": "even",
+        "baudRate": 9600,
+        "dataBits": 8,
+        "stopBits": 1
+      },
+      "label": "Meter 4",
+      "device": "",
+      "meter_no": 5,
+      "meter_make": "L&T",
+      "meter_name": "5000 Series",
+      "meter_type": "Advanced Multifunction Meters",
+      "meter_model": "5000 LCD Series"
+    }
+  ],
+  "interval": 13,
+  "device_id": "sky0824d0b767",
+  "database_name": "mydb"
+}

@@ -1,0 +1,1712 @@
+[
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "LG 6400",
+        "device_type": "Energy Meter",
+        "device_name": "Demand Controllers",
+        "device_description": "MFM, 2 Relay Demand Controller (LED), Class 1.0, RS485, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "EN 8400",
+        "device_type": "Energy Meter",
+        "device_name": "Demand Controllers",
+        "device_description": "High Profile 4 Relay Demand Controller (LED), Class 1.0, RS485, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "EN 7500",
+        "device_type": "Energy Meter",
+        "device_name": "Demand Controllers",
+        "device_description": "High Profile 2 Relay Demand Controller (LCD), Class 1.0, RS485, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "PN 8700",
+        "device_type": "Energy Meter",
+        "device_name": "Demand Controllers",
+        "device_description": "High Profile 4 Relay Demand Controller (LCD), Class 0.2S, RS485, TOD, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "EN 8420",
+        "device_type": "Energy Meter",
+        "device_name": "Power Quality Monitors",
+        "device_description": "High Profile Dual Source MFM (LED), Class 1.0, Demand Monitor, RS485, 5A Inbuilt",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "EN 7520",
+        "device_type": "Energy Meter",
+        "device_name": "Power Quality Monitors",
+        "device_description": "High Profile Dual Source Demand Monitor (LCD), Class 0.5S, RS485, 1DO, 5A Inbuilt",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "LG 6435",
+        "device_type": "Energy Meter",
+        "device_name": "Multifunctional Energy Meter",
+        "device_description": "MFM, Class 1.0, RS485, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "LG 6430",
+        "device_type": "Energy Meter",
+        "device_name": "Multifunctional Energy Meter",
+        "device_description": "MFM, Class 1.0, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "LG 2510",
+        "device_type": "Energy Meter",
+        "device_name": "Multifunctional Energy Meter",
+        "device_description": "MFM, Class 1.0, RS485, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "LG 2519",
+        "device_type": "Energy Meter",
+        "device_name": "Multifunctional Energy Meter",
+        "device_description": "Digital Energy Meter, Class 1.0, RS485, 5A Inbuilt",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "µG 1119",
+        "device_type": "Energy Meter",
+        "device_name": "Multifunctional Energy Meter",
+        "device_description": "Digital Energy Meter, Class 1.0, 5A Inbuilt, 96x48mm",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "µG 5110",
+        "device_type": "Energy Meter",
+        "device_name": "Multifunctional Energy Meter",
+        "device_description": "MFM, Class 1.0, RS485, 5A Inbuilt, 96x48mm",
+        "baud_rate": [
+            1200,
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "SL 1300",
+        "device_type": "Energy Meter",
+        "device_name": "Basic Meters",
+        "device_description": "VAF Meter + PF, Class 1.0, 5A Inbuilt, RS485",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Even",
+            "No",
+            "Odd"
+        ]
+    },
+    {
+        "device_make": "ELMEASURE",
+        "device_model": "SL 4300",
+        "device_type": "Energy Meter",
+        "device_name": "Basic Meters",
+        "device_description": "VAF Meter + W, VA, PF & VAR, Class 1.0, RS485, 5A Inbuilt",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Even",
+            "No",
+            "Odd"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4000 LED Series",
+        "device_type": "Energy Meter",
+        "device_name": "4000 Series",
+        "device_description": "kWh LED meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4000 LCD Series",
+        "device_type": "Energy Meter",
+        "device_name": "4000 Series",
+        "device_description": "kWh LCD meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4110 Series",
+        "device_type": "VAF + PF Meters",
+        "device_name": "4110 Series",
+        "device_description": "VAF + PF meter with RS485, Cl 0.5",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4040 LED Series",
+        "device_type": "Dual Source Basic MFM",
+        "device_name": "4040 Series",
+        "device_description": "Dualsource LED meter Cl0.5 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4040 LCD Series",
+        "device_type": "Dual Source Basic MFM",
+        "device_name": "4040 Series",
+        "device_description": "Dualsource LCD meter Cl0.5 with RS486",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4405 Series",
+        "device_type": "Basic Multifunction Meters",
+        "device_name": "4405 Series",
+        "device_description": "MFM 4405 LED meter Cl 0.5S with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4400 LCD Series",
+        "device_type": "Basic Multifunction Meters",
+        "device_name": "4400 Series",
+        "device_description": "MFM 4400 LED meter Cl 0.5S with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4400 LED Series",
+        "device_type": "Basic Multifunction Meters",
+        "device_name": "4400 Series",
+        "device_description": "MFM 4400 LCD meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4410 LED Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4410 Series",
+        "device_description": "MFM 4410 LED meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4410 LCD Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4410 Series",
+        "device_description": "MFM 4410 LCD meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4420 LED Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4420 Series Max Demand Indicator",
+        "device_description": "MFM 4420 LED meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4420 LCD Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4420 Series Max Demand Indicator",
+        "device_description": "MFM 4420 LCD meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "5000 LED Series",
+        "device_type": "Advanced Multifunction Meters",
+        "device_name": "5000 Series",
+        "device_description": "MFM 5000 LED meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "5000 LCD Series",
+        "device_type": "Advanced Multifunction Meters",
+        "device_name": "5000 Series",
+        "device_description": "MFM 5000 LCD meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4430 LED Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4430 Series Max Demand Indicator",
+        "device_description": "MFM 4430 LED meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4430 LCD Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4430 Series Max Demand Indicator",
+        "device_description": "MFM 4430 LCD meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4440 LED Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4440 Series",
+        "device_description": "MFM 4440 LED meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "4440 LCD Series",
+        "device_type": "Multifunction Meters",
+        "device_name": "4440 Series",
+        "device_description": "MFM 4440 LCD meter Cl 0.5 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "5010 LED Series",
+        "device_type": "Advanced Multifunction Meters",
+        "device_name": "5010 Series",
+        "device_description": "MFM 5010 LED meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "5010 LCD Series",
+        "device_type": "Advanced Multifunction Meters",
+        "device_name": "5010 Series",
+        "device_description": "MFM 5010 LCD meter Cl 0.2 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "6000 LED Series",
+        "device_type": "Maximum Demand Controller",
+        "device_name": "",
+        "device_description": "MDC 6000 LED meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "L&T",
+        "device_model": "6000 LCD Series",
+        "device_type": "Maximum Demand Controller",
+        "device_name": "",
+        "device_description": "MDC 6000 LCD meter Cl 1 with RS485",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM 7290",
+        "device_type": "Smart Demand Controller",
+        "device_name": "EM7200 Series",
+        "device_description": "Demand Controller Cl0.2* with RS485 Port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM 7280",
+        "device_type": "Smart Demand Controller",
+        "device_name": "EM7200 Series",
+        "device_description": "Demand Controller Cl0.5S with RS485 Port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM 7230",
+        "device_type": "Smart Demand Controller",
+        "device_name": "EM7200 Series",
+        "device_description": "Demand Controller Cl1.0 with RS485 Port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "PM2230",
+        "device_type": "EasyLogicTM",
+        "device_name": "PM2000 Series",
+        "device_description": "PM2230, LCD, RS485, Accuracy Cl0.5S, 31st Ind.harmonics, 12am snap shot, kg CO2 and energy rate counters, Data logging",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "PM2220",
+        "device_type": "EasyLogicTM",
+        "device_name": "PM2000 Series",
+        "device_description": "PM2220, LCD, RS485, Accuracy Cl1, 15th Ind.harmonics, 12am snap shot, kg CO2 and energy rate counters",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "PM2130",
+        "device_type": "EasyLogicTM",
+        "device_name": "PM2000 Series",
+        "device_description": "PM2130, LED, RS485, Accuracy Cl0.5S, Ind. Harmonics up to 31st over communication, data logging",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM6400NG",
+        "device_type": "EasyLogicTM",
+        "device_name": "EM6400NG+ Series",
+        "device_description": "Class accuracy CI0.2, RS485 port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "PM1130H",
+        "device_type": "Hexa Series",
+        "device_name": "EM64XXH and PM1130H Meters",
+        "device_description": "EASYLOGICTM PM1130H Dual Source Power & Energy Meter, Class accuracy 0.5, 01 Relay Contact, 01 RS485 port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM6438H",
+        "device_type": "Hexa Series",
+        "device_name": "EM64XXH and PM1130H Meters",
+        "device_description": "EasyLogicTM EM6438H Dual Power & Energy Meter, Class accuracy 0.5, 01 RS485 port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM6436H",
+        "device_type": "Hexa Series",
+        "device_name": "EM64XXH and PM1130H Meters",
+        "device_description": "EasyLogicTM EM6436H VAF+ PF + Power & Energy Meter, Class accuracy 0.5, 01 RS485 port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM6433H",
+        "device_type": "Hexa Series",
+        "device_name": "EM64XXH and PM1130H Meters",
+        "device_description": "EasyLogicTM EM6433H A+ Power & Energy Meter, Class accuracy 0.5, 01 RS485 port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "EM6459H",
+        "device_type": "Hexa Series",
+        "device_name": "EM64XXH and PM1130H Meters",
+        "device_description": "EasyLogicTM EM6459H VAF+ PF Digital Meter, Class accuracy 0.5, 01 RS485 port",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "PM 3255",
+        "device_type": "PowerLogic™",
+        "device_name": "PM 3255 Series",
+        "device_description": "Din rail Power meter Modbus",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "PM 3210",
+        "device_type": "PowerLogic™",
+        "device_name": "PM 3210Series",
+        "device_description": "Din rail Power meter pulse",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "iEM33xx",
+        "device_type": "Din Rail Meter",
+        "device_name": "iEM33xx",
+        "device_description": "Three Phase, 125A Direct Current, Lonwork",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "iEM 3x65",
+        "device_type": "Din Rail Meter / Direct Current-Three phase",
+        "device_name": "iEM 3x65",
+        "device_description": "",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "iEM 3x55",
+        "device_type": "Din Rail Meter / Direct Current-Three phase",
+        "device_name": "iEM 3x55",
+        "device_description": "",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "iEM 3x50",
+        "device_type": "Din Rail Meter / Direct Current-Three phase",
+        "device_name": "iEM 3x50",
+        "device_description": "",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SCHNEIDER",
+        "device_model": "iEM 3x10",
+        "device_type": "Din Rail Meter / Direct Current-Three phase",
+        "device_name": "iEM 3x10",
+        "device_description": "",
+        "baud_rate": [
+            4800,
+            9600,
+            19200,
+            38400
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M1M 12",
+        "device_type": "M1M 12 Multi-function meter",
+        "device_name": "M1M 12",
+        "device_description": "M1M 12 is a multi-function meter with aux supply 80-300 V AC/DC, LED display",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M1M 15",
+        "device_type": "M1M 15 Power meter",
+        "device_name": "M1M 15",
+        "device_description": "M1M 15 Modbus is a multimeter with aux supply 100-230 V AC/DC, LED display, Modbus RTU",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M1M 20",
+        "device_type": "M1M 20 Power meter",
+        "device_name": "M1M 20",
+        "device_description": "M1M 20 is a power meter with aux supply 100-230 V AC/DC, LCD display",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M1M 30",
+        "device_type": "M1M 30 Power meter",
+        "device_name": "M1M 30",
+        "device_description": "M1M 30 Modbus is a power meter with 2 digital outputs, aux supply 100-230 V AC/DC, LCD display, Modbus RTU",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M1M 20B",
+        "device_type": "M1M 20B Power meter",
+        "device_name": "M1M 20B",
+        "device_description": "Power meter, LED display, Modbus RTU. 0,2% accuracy",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M1M 30B",
+        "device_type": "M1M 30B Power meter",
+        "device_name": "M1M 30B",
+        "device_description": "Advanced Power meter, LED display, Modbus RTU. 0,5% accuracy",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M4M 20",
+        "device_type": "M4M 20 Network analyzer",
+        "device_name": "M4M 20",
+        "device_description": "M4M 20 is a network analyzer with 2 digital outputs, aux supply 48-240 V AC/DC and Bluetooth",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M4M 30",
+        "device_type": "M4M 30 Network analyzer",
+        "device_name": "M4M 30",
+        "device_description": "M4M 30 MODBUS is a network analyzer with 4 programmable I/O, aux supply 48-240 V AC/DC, Bluetooth and Modbus RTU",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "ABB",
+        "device_model": "M4M 2X",
+        "device_type": "M4M 2X MODBUS Network analyzer",
+        "device_name": "M4M 2X",
+        "device_description": "M4M 2X Modbus is a network analyzer without display with 2 digital outputs, aux supply 48-240 V AC/DC, Bluetooth and Modbus RTU",
+        "baud_rate": [
+            9600,
+            19200,
+            38400,
+            57600,
+            115200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-441",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-442",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-443",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-444",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-445",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-446",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-447",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-440-448",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-100-103",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-300-30A/30B",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "SECURE",
+        "device_model": "ELITE-300-303/307",
+        "device_type": "Multi-line three-phase panel meter",
+        "device_name": "",
+        "device_description": "",
+        "baud_rate": [
+            "1200",
+            "2400",
+            "4800",
+            "9600",
+            "19200",
+            "38400"
+        ],
+        "parity": [
+            "Even",
+            "Odd",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "ME2A1",
+        "device_type": "Basic Energy Meter",
+        "device_name": "ME2A1",
+        "device_description": "Basic energy meter with RS485 MODBUS-RTU communication option.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "ME2V1",
+        "device_type": "Basic Energy Meter",
+        "device_name": "ME2V1",
+        "device_description": "Basic energy meter with RS485 MODBUS-RTU communication option.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "ME2A3",
+        "device_type": "Basic Energy Meter",
+        "device_name": "ME2A3",
+        "device_description": "Three phase basic energy meter with RS485 MODBUS-RTU communication option.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "ME2V3",
+        "device_type": "Basic Energy Meter",
+        "device_name": "ME2V3",
+        "device_description": "Three phase basic energy meter with RS485 MODBUS-RTU communication option.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "ME2F1",
+        "device_type": "Basic Energy Meter",
+        "device_name": "ME2F1",
+        "device_description": "Basic energy meter with RS485 MODBUS-RTU communication option.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "PF300",
+        "device_type": "Basic Energy Meter",
+        "device_name": "PF300",
+        "device_description": "Basic energy meter with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Infinity",
+        "device_type": "Basic Energy Meter",
+        "device_name": "Infinity",
+        "device_description": "Dual source energy meter with RS485 MODBUS-RTU communication, whole current models available.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Entity",
+        "device_type": "Basic Energy Meter",
+        "device_name": "Entity",
+        "device_description": "Three phase digital energy meter with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "VAF",
+        "device_type": "Basic Energy Meter",
+        "device_name": "VAF",
+        "device_description": "Basic energy meter with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Tiny-Pro-6",
+        "device_type": "Intelligent & Smart Meter",
+        "device_name": "Tiny-Pro-6",
+        "device_description": "Multifunction meter with RS485 MODBUS-RTU communication, 0.4” LED display, measures multiple electrical parameters.",
+        "baud_rate": [
+            9600
+        ],
+        "parity": [
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "NF29",
+        "device_type": "Intelligent & Smart Meter",
+        "device_name": "NF29",
+        "device_description": "Three phase multifunction meter with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            9600
+        ],
+        "parity": [
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Empower Plus",
+        "device_type": "Intelligent & Smart Meter",
+        "device_name": "Empower Plus",
+        "device_description": "Multifunction meter with RS485 MODBUS-RTU communication supporting multiple electrical parameters.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Blind Measuring Module",
+        "device_type": "Intelligent & Smart Meter",
+        "device_name": "Blind Measuring Module",
+        "device_description": "Module with RS485 MODBUS-RTU communication for blind measurement applications.",
+        "baud_rate": [
+            9600
+        ],
+        "parity": [
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "SLM-PRO",
+        "device_type": "Intelligent & Smart Meter",
+        "device_name": "SLM-PRO",
+        "device_description": "Smart meter with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            9600
+        ],
+        "parity": [
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Power PRO",
+        "device_type": "Intelligent & Smart Meter",
+        "device_name": "Power PRO",
+        "device_description": "Three phase multifunction meter with RS485 MODBUS-RTU communication and advanced features.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Xpert Lite",
+        "device_type": "Demand Controller & Data Logger",
+        "device_name": "Xpert Lite",
+        "device_description": "Demand controller with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            9600
+        ],
+        "parity": [
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Xpert Pro",
+        "device_type": "Demand Controller & Data Logger",
+        "device_name": "Xpert Pro",
+        "device_description": "Demand controller with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            9600
+        ],
+        "parity": [
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Xpert Plus",
+        "device_type": "Demand Controller & Data Logger",
+        "device_name": "Xpert Plus",
+        "device_description": "Demand controller and data logger with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            2400,
+            4800,
+            9600,
+            19200
+        ],
+        "parity": [
+            "Odd",
+            "Even",
+            "None"
+        ]
+    },
+    {
+        "device_make": "TRINITY",
+        "device_model": "Goblin Plus",
+        "device_type": "Demand Controller & Data Logger",
+        "device_name": "Goblin Plus",
+        "device_description": "Demand controller and data logger with RS485 MODBUS-RTU communication.",
+        "baud_rate": [
+            9600
+        ],
+        "parity": [
+            "None"
+        ]
+    }
+]

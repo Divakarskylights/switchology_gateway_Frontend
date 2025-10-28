@@ -1,0 +1,47 @@
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box; /* Good practice to include */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide the increment and decrement arrows for input[type=number] */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.mermaid {
+  margin-top: 25px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+
+  /* Flexbox to center the chart */
+  display: flex;            /* Enables flexbox layout */
+  justify-content: center;   /* Centers horizontally */
+  align-items: center;       /* Centers vertically if needed */
+  
+  width: 100%;               /* Allow container to take full width */
+  height: auto;              /* Height adjusts based on content */
+  max-height: none;          /* Remove height restrictions */
+  overflow-x: auto;          /* Horizontal scrollbar if content exceeds width */
+  overflow-y: auto;          /* Vertical scrollbar if content exceeds height */
+}
+
+.mermaid svg {
+  display: block;            /* Ensures the SVG element takes its natural size */
+  margin: 0 auto;            /* Center the flowchart inside the container */
+}

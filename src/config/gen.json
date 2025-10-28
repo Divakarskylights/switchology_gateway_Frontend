@@ -1,0 +1,2969 @@
+{
+    "id": 22,
+    "uid": "P4B5EB7AC8565B06D",
+    "tags": [
+        "sky"
+    ],
+    "time": {
+        "to": "now/d",
+        "from": "now/d"
+    },
+    "links": [
+        {
+            "url": "",
+            "icon": "external link",
+            "tags": [
+                "VIEW"
+            ],
+            "type": "dashboards",
+            "title": "HOME",
+            "tooltip": "",
+            "keepTime": false,
+            "asDropdown": false,
+            "includeVars": false,
+            "targetBlank": false
+        }
+    ],
+    "style": "dark",
+    "title": "Home Dashboard",
+    "panels": [
+        {
+            "id": 48,
+            "type": "text",
+            "links": [],
+            "gridPos": {
+                "h": 5,
+                "w": 7,
+                "x": 0,
+                "y": 0
+            },
+            "options": {
+                "code": {
+                    "language": "plaintext",
+                    "showMiniMap": false,
+                    "showLineNumbers": false
+                },
+                "mode": "html",
+                "content": "<img src=\"https://skylightsenergy.s3.ap-south-1.amazonaws.com/switchologyTranspWhiteLttr.png\" alt=\"skylights\" style=\"width:210px;height:70px\"><br>\r\nSKYLIGHTS ENERGY <BR>\r\nNO.127/390 23RD CROSS 5TH MAIN<BR>\r\nHSR LYT 7TH SECT BANGALORE 560102<br>\r\ninfo@skylightsenergy.in / +91-9100010019<br>"
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "LG5310: KWH DELIVERED",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1m"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "SCHNEIDER: LIFT KWH",
+                    "refId": "B",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Active_Energy_Delivered_kWh"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1m"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "tags": [],
+                    "alias": "EN8400: 1PH UPS CURRENT",
+                    "refId": "C",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "$__interval"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "transparent": true,
+            "pluginVersion": "10.0.1",
+            "transformations": [
+                {
+                    "id": "calculateField",
+                    "options": {
+                        "mode": "reduceRow",
+                        "alias": "KWH: LIFT+UPS",
+                        "reduce": {
+                            "include": [
+                                "SCHNEIDER: LIFT KWH",
+                                "EN8400: 1PH UPS CURRENT"
+                            ],
+                            "reducer": "sum"
+                        }
+                    }
+                },
+                {
+                    "id": "calculateField",
+                    "options": {
+                        "mode": "binary",
+                        "alias": "KWH REST BUILDING",
+                        "binary": {
+                            "left": "LG5310: KWH DELIVERED",
+                            "right": "KWH LIFT+UPS",
+                            "reducer": "sum",
+                            "operator": "-"
+                        },
+                        "reduce": {
+                            "reducer": "sum"
+                        },
+                        "replaceFields": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "type": "text",
+            "links": [],
+            "title": "ENERGY ANALYTICS INFORMATION",
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 7,
+                "y": 0
+            },
+            "options": {
+                "code": {
+                    "language": "plaintext",
+                    "showMiniMap": false,
+                    "showLineNumbers": false
+                },
+                "mode": "html",
+                "content": "ENERGY MANAGEMENT SOLUTIONS, <BR>\r\nLOCAL DESKTOP ENERGY MONITORING SYSTEM<BR>\r\n<b><strong>SERVICE PROVIDER: SKYLIGHTS ENERGY</b></strong><br>\r\n<b><strong>CLIENT : BUILDING NAME: RAJAN, HSR LAYOUT</b></strong><br>\r\nCLIENT NAME: MR. GURU, LOCATON : HSR LAYOUT BANGALORE<BR>\r\nFactory installation & commission date: JULY 11TH 2023<br>\r\n"
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "LG5310: KWH DELIVERED",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1m"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "SCHNEIDER: LIFT KWH",
+                    "refId": "B",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Active_Energy_Delivered_kWh"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1m"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "tags": [],
+                    "alias": "EN8400: 1PH UPS CURRENT",
+                    "refId": "C",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "$__interval"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "transparent": true,
+            "pluginVersion": "10.0.1",
+            "transformations": [
+                {
+                    "id": "calculateField",
+                    "options": {
+                        "mode": "reduceRow",
+                        "alias": "KWH: LIFT+UPS",
+                        "reduce": {
+                            "include": [
+                                "SCHNEIDER: LIFT KWH",
+                                "EN8400: 1PH UPS CURRENT"
+                            ],
+                            "reducer": "sum"
+                        }
+                    }
+                },
+                {
+                    "id": "calculateField",
+                    "options": {
+                        "mode": "binary",
+                        "alias": "KWH REST BUILDING",
+                        "binary": {
+                            "left": "LG5310: KWH DELIVERED",
+                            "right": "KWH LIFT+UPS",
+                            "reducer": "sum",
+                            "operator": "-"
+                        },
+                        "reduce": {
+                            "reducer": "sum"
+                        },
+                        "replaceFields": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "type": "text",
+            "title": "DIGITAL METER DETAILS",
+            "gridPos": {
+                "h": 5,
+                "w": 9,
+                "x": 15,
+                "y": 0
+            },
+            "options": {
+                "code": {
+                    "language": "plaintext",
+                    "showMiniMap": false,
+                    "showLineNumbers": false
+                },
+                "mode": "html",
+                "content": "Number of Digital Meters connected: 8 Nos. <br>\r\nNumber of Sensors connected: 0 Nos.<br>\r\nTotal number of Digital Meter connectable: 15 Nos.<br>\r\nMeter Model: ELMEASURE 8400:2Nos. LG3120:6Nos.<br>\r\nMeter communcation details: 9600 baudrate, even parity<br>\r\nNote: Meter device ID must be between 2 to 16 only.<br>\r\n\r\n"
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "LG5310: KWH DELIVERED",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1m"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "SCHNEIDER: LIFT KWH",
+                    "refId": "B",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Active_Energy_Delivered_kWh"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1m"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "tags": [],
+                    "alias": "EN8400: 1PH UPS CURRENT",
+                    "refId": "C",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            },
+                            {
+                                "type": "math",
+                                "params": [
+                                    " / 1000"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "$__interval"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "transparent": true,
+            "pluginVersion": "10.0.1",
+            "transformations": [
+                {
+                    "id": "calculateField",
+                    "options": {
+                        "mode": "reduceRow",
+                        "alias": "KWH: LIFT+UPS",
+                        "reduce": {
+                            "include": [
+                                "SCHNEIDER: LIFT KWH",
+                                "EN8400: 1PH UPS CURRENT"
+                            ],
+                            "reducer": "sum"
+                        }
+                    }
+                },
+                {
+                    "id": "calculateField",
+                    "options": {
+                        "mode": "binary",
+                        "alias": "KWH REST BUILDING",
+                        "binary": {
+                            "left": "LG5310: KWH DELIVERED",
+                            "right": "KWH LIFT+UPS",
+                            "reducer": "sum",
+                            "operator": "-"
+                        },
+                        "reduce": {
+                            "reducer": "sum"
+                        },
+                        "replaceFields": false
+                    }
+                }
+            ]
+        },
+        {
+            "id": 22,
+            "type": "piechart",
+            "title": "VOLTAGE",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 0,
+                "y": 5
+            },
+            "options": {
+                "legend": {
+                    "values": [
+                        "percent",
+                        "value"
+                    ],
+                    "placement": "right",
+                    "showLegend": false,
+                    "displayMode": "table"
+                },
+                "pieType": "pie",
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                },
+                "displayLabels": [
+                    "value",
+                    "percent"
+                ],
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                }
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: RY PHASE",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Vry_Phase"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: YB PHASE",
+                    "refId": "B",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Vyb_Phase"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: BR PHASE",
+                    "refId": "C",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Vbr_Phase"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "volt",
+                    "color": {
+                        "mode": "shades",
+                        "fixedColor": "text"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "viz": false,
+                            "legend": false,
+                            "tooltip": false
+                        }
+                    },
+                    "noValue": "OFF",
+                    "mappings": []
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: RY PHASE"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "red"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: YB PHASE"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "yellow"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: BR PHASE"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "blue"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "transparent": true,
+            "pluginVersion": "8.0.6"
+        },
+        {
+            "id": 21,
+            "type": "gauge",
+            "title": "METER1: PH-PH VOLTAGE",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 3,
+                "y": 5
+            },
+            "options": {
+                "text": {},
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: PH-PH VOLTAGE",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "VLL_Average"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "10s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "previous"
+                            ]
+                        }
+                    ],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "max": 456.5,
+                    "min": 373.5,
+                    "unit": "volt",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "noValue": "OFF",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: PH-PH VOLTAGE"
+                        },
+                        "properties": [
+                            {
+                                "id": "thresholds",
+                                "value": {
+                                    "mode": "absolute",
+                                    "steps": [
+                                        {
+                                            "color": "green",
+                                            "value": null
+                                        },
+                                        {
+                                            "color": "red",
+                                            "value": 373
+                                        },
+                                        {
+                                            "color": "green",
+                                            "value": 394
+                                        },
+                                        {
+                                            "color": "red",
+                                            "value": 435.75
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "transparent": true,
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 20,
+            "type": "gauge",
+            "title": "METER1: FREQUENCY",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 6,
+                "y": 5
+            },
+            "options": {
+                "text": {},
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: FREQUENCY",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Frequency"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "10s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "previous"
+                            ]
+                        }
+                    ],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "max": 52,
+                    "min": 48,
+                    "unit": "rothz",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "noValue": "OFF",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: FREQUENCY"
+                        },
+                        "properties": [
+                            {
+                                "id": "thresholds",
+                                "value": {
+                                    "mode": "absolute",
+                                    "steps": [
+                                        {
+                                            "color": "green",
+                                            "value": null
+                                        },
+                                        {
+                                            "color": "red",
+                                            "value": 48
+                                        },
+                                        {
+                                            "color": "green",
+                                            "value": 49
+                                        },
+                                        {
+                                            "color": "red",
+                                            "value": 51
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "transparent": true,
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 45,
+            "type": "gauge",
+            "title": "METER1: CURRENT",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 9,
+                "y": 5
+            },
+            "options": {
+                "text": {},
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: CURRENT",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_Total"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "10s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "previous"
+                            ]
+                        }
+                    ],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "max": 153,
+                    "min": 0,
+                    "unit": "amp",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "noValue": "OFF",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "blue",
+                                "value": null
+                            },
+                            {
+                                "color": "blue",
+                                "value": 10
+                            },
+                            {
+                                "color": "green",
+                                "value": 20
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 40
+                            },
+                            {
+                                "color": "orange",
+                                "value": 60
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "transparent": true,
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 19,
+            "type": "gauge",
+            "title": "METER1:  PF",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 12,
+                "y": 5
+            },
+            "options": {
+                "text": {},
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: PF",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "PF_Ave_Inst"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "10s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "previous"
+                            ]
+                        }
+                    ],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "max": 1.5,
+                    "min": -1.5,
+                    "unit": "none",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "noValue": "OFF",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "percentage",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: PF"
+                        },
+                        "properties": [
+                            {
+                                "id": "thresholds",
+                                "value": {
+                                    "mode": "absolute",
+                                    "steps": [
+                                        {
+                                            "color": "green",
+                                            "value": null
+                                        },
+                                        {
+                                            "color": "green",
+                                            "value": -0.91
+                                        },
+                                        {
+                                            "color": "red",
+                                            "value": -0.9
+                                        },
+                                        {
+                                            "color": "red",
+                                            "value": 0.9
+                                        },
+                                        {
+                                            "color": "green",
+                                            "value": 0.91
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "transparent": true,
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 47,
+            "type": "gauge",
+            "title": "METER1: LOAD %",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 15,
+                "y": 5
+            },
+            "options": {
+                "text": {},
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showThresholdLabels": false,
+                "showThresholdMarkers": true
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1:  CURRENT",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_Total"
+                                ]
+                            }
+                        ]
+                    ],
+                    "groupBy": [],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "max": 100,
+                    "min": 0,
+                    "unit": "percent",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "noValue": "OFF",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "blue",
+                                "value": 0
+                            },
+                            {
+                                "color": "green",
+                                "value": 25
+                            },
+                            {
+                                "color": "yellow",
+                                "value": 50
+                            },
+                            {
+                                "color": "orange",
+                                "value": 75
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "transparent": true,
+            "pluginVersion": "10.0.1",
+            "transformations": [
+                {
+                    "id": "calculateField",
+                    "options": {
+                        "mode": "binary",
+                        "alias": "LOAD %",
+                        "binary": {
+                            "left": "METER1:  CURRENT",
+                            "right": "1.53",
+                            "reducer": "sum",
+                            "operator": "/"
+                        },
+                        "reduce": {
+                            "reducer": "sum"
+                        },
+                        "replaceFields": true
+                    }
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "type": "stat",
+            "title": "METER1: LOAD KVA",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 18,
+                "y": 5
+            },
+            "options": {
+                "text": {},
+                "textMode": "value_and_name",
+                "colorMode": "background",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                }
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER 1",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "VA_Total"
+                                ]
+                            },
+                            {
+                                "type": "last",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "10s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "previous"
+                            ]
+                        }
+                    ],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "voltamp",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "noValue": "METER OFF",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "transparent": true,
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 30,
+            "type": "stat",
+            "title": "METER1: ENERGY KWH",
+            "gridPos": {
+                "h": 5,
+                "w": 3,
+                "x": 21,
+                "y": 5
+            },
+            "options": {
+                "text": {},
+                "textMode": "auto",
+                "colorMode": "background",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "sum"
+                    ],
+                    "fields": "",
+                    "values": false
+                }
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER 1",
+                    "refId": "A",
+                    "units": "none",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            },
+                            {
+                                "type": "difference",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "$__interval"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "decimals": 2,
+                    "$$hashKey": "object:45",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "aggregation": "Last",
+                    "displayType": "Regular",
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series",
+                    "valueHandler": "Number Threshold",
+                    "displayAliasType": "Warning / Critical",
+                    "displayValueWithAlias": "Never"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "watth",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "noValue": "OFF",
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "transparent": true,
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 17,
+            "type": "timeseries",
+            "title": "METER1: CURRENT A",
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 0,
+                "y": 10
+            },
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "min",
+                        "max",
+                        "mean"
+                    ],
+                    "placement": "bottom",
+                    "showLegend": true,
+                    "displayMode": "table"
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: CURRENT BPH",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_R_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "36s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: CURRENT RPH",
+                    "refId": "D",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_R_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "36s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: CURRENT YPH",
+                    "refId": "B",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_Y_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "36s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: CURRENT AVERAGE",
+                    "refId": "C",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_Total"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "36s"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "amp",
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "viz": false,
+                            "legend": false,
+                            "tooltip": false
+                        },
+                        "stacking": {
+                            "mode": "none",
+                            "group": "A"
+                        },
+                        "axisLabel": "",
+                        "drawStyle": "line",
+                        "lineWidth": 4,
+                        "pointSize": 5,
+                        "spanNulls": false,
+                        "showPoints": "auto",
+                        "fillOpacity": 0,
+                        "barAlignment": 0,
+                        "gradientMode": "none",
+                        "axisColorMode": "text",
+                        "axisPlacement": "auto",
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        },
+                        "axisCenteredZero": false,
+                        "lineInterpolation": "linear",
+                        "scaleDistribution": {
+                            "type": "linear"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: CURRENT RPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-red"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: CURRENT YPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-yellow"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: CURRENT BPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-blue"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "transparent": true
+        },
+        {
+            "id": 51,
+            "type": "barchart",
+            "title": "METER1: ENERGY KWH",
+            "gridPos": {
+                "h": 10,
+                "w": 12,
+                "x": 12,
+                "y": 10
+            },
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "placement": "bottom",
+                    "showLegend": true,
+                    "displayMode": "list"
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                },
+                "barWidth": 0.97,
+                "stacking": "none",
+                "barRadius": 0,
+                "showValue": "auto",
+                "groupWidth": 0.7,
+                "orientation": "auto",
+                "fullHighlight": false,
+                "xTickLabelSpacing": 0,
+                "xTickLabelRotation": 0
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: ENERGY KWH",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Wh_Received"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            },
+                            {
+                                "type": "difference",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "watth",
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "hideFrom": {
+                            "viz": false,
+                            "legend": false,
+                            "tooltip": false
+                        },
+                        "axisLabel": "",
+                        "lineWidth": 1,
+                        "fillOpacity": 80,
+                        "gradientMode": "none",
+                        "axisColorMode": "text",
+                        "axisPlacement": "auto",
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        },
+                        "axisCenteredZero": false,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: CURRENT RPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-red"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: CURRENT YPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-yellow"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "METER1: CURRENT BPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-blue"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "transparent": true
+        },
+        {
+            "id": 18,
+            "type": "stat",
+            "title": "VOLTAGE PER PHASE",
+            "gridPos": {
+                "h": 5,
+                "w": 7,
+                "x": 0,
+                "y": 20
+            },
+            "options": {
+                "textMode": "auto",
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                }
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: VOLTAGE RY",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Vry_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: VOLTAGE YB",
+                    "refId": "B",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Vyb_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: VOLTAGE BR",
+                    "refId": "C",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Vbr_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "volt",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "VOLTAGE RY"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-red"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "VOLTAGE YB"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-yellow"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "VOLTAGE BR"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-blue"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 49,
+            "type": "stat",
+            "title": "WATTS PER PH",
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 7,
+                "y": 20
+            },
+            "options": {
+                "textMode": "auto",
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                }
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: WATTS R PH",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Watts_R_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: WATTS Y",
+                    "refId": "B",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Watts_Y_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: WATTS B",
+                    "refId": "C",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Watts_B_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "watth",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "WATTS R PH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-red"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "WATTS Y"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-yellow"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "WATTS B"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-blue"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 50,
+            "type": "stat",
+            "title": "CURRENT PER PHASE",
+            "gridPos": {
+                "h": 5,
+                "w": 9,
+                "x": 15,
+                "y": 20
+            },
+            "options": {
+                "textMode": "auto",
+                "colorMode": "value",
+                "graphMode": "area",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                }
+            },
+            "targets": [
+                {
+                    "tags": [],
+                    "alias": "METER1: CURRENT RPH",
+                    "refId": "A",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_B_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: CURRENT YPH",
+                    "refId": "B",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_Y_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                },
+                {
+                    "hide": false,
+                    "tags": [],
+                    "alias": "METER1: CURRENT BPH",
+                    "refId": "C",
+                    "policy": "default",
+                    "select": [
+                        [
+                            {
+                                "type": "field",
+                                "params": [
+                                    "Current_B_Phase"
+                                ]
+                            },
+                            {
+                                "type": "mean",
+                                "params": []
+                            }
+                        ]
+                    ],
+                    "groupBy": [
+                        {
+                            "type": "time",
+                            "params": [
+                                "1h"
+                            ]
+                        },
+                        {
+                            "type": "fill",
+                            "params": [
+                                "null"
+                            ]
+                        }
+                    ],
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3",
+                    "orderByTime": "ASC",
+                    "resultFormat": "time_series"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "description": "",
+            "fieldConfig": {
+                "defaults": {
+                    "unit": "amp",
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "CURRENT RPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-red"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "CURRENT YPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-yellow"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "CURRENT BPH"
+                        },
+                        "properties": [
+                            {
+                                "id": "color",
+                                "value": {
+                                    "mode": "fixed",
+                                    "fixedColor": "dark-blue"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "pluginVersion": "10.0.1"
+        },
+        {
+            "id": 34,
+            "type": "text",
+            "gridPos": {
+                "h": 2,
+                "w": 24,
+                "x": 0,
+                "y": 25
+            },
+            "options": {
+                "code": {
+                    "language": "plaintext",
+                    "showMiniMap": false,
+                    "showLineNumbers": false
+                },
+                "mode": "markdown",
+                "content": "<i>All data displayed is bound by confidentiality agreement between\n    [Client] & [M/s. Skylights Energy, Bangalore].<br>\n    Sharing data or information from this platform needs prior approval from Client.\n</i>\n<hr>  "
+            },
+            "targets": [
+                {
+                    "refId": "A",
+                    "datasource": {
+                        "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                        "type": "influxdb"
+                    },
+                    "measurement": "sky0824d0b767_id3"
+                }
+            ],
+            "datasource": {
+                "uid": "b93ed14d-fa70-4639-a3c4-8faeec58eafa",
+                "type": "influxdb"
+            },
+            "pluginVersion": "10.0.1"
+        }
+    ],
+    "liveNow": false,
+    "refresh": "",
+    "version": 3,
+    "editable": true,
+    "timezone": "browser",
+    "weekStart": "",
+    "templating": {
+        "list": []
+    },
+    "timepicker": {},
+    "annotations": {
+        "list": [
+            {
+                "hide": true,
+                "name": "Annotations & Alerts",
+                "type": "dashboard",
+                "enable": true,
+                "target": {
+                    "tags": [],
+                    "type": "dashboard",
+                    "limit": 100,
+                    "matchAny": false
+                },
+                "builtIn": 1,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "datasource": {
+                    "uid": "grafana",
+                    "type": "datasource"
+                }
+            }
+        ]
+    },
+    "description": "",
+    "graphTooltip": 0,
+    "schemaVersion": 38,
+    "fiscalYearStartMonth": 0
+}

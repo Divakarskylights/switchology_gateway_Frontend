@@ -1,0 +1,94 @@
+
+{
+    "device_id": "SKY0824d0b767",
+    "database_name": "abc",
+    "values": [
+        {
+            "con": {
+                "lock": false,
+                "parity": "even",
+                "baudRate": 9600,
+                "dataBits": 8,
+                "stopBits": 1
+            },
+            "device": "",
+            "label": "demo",
+            "metermodel": "EN 8400",
+            "metername": "Demand Controllers",
+            "metertype": "Energy Meter",
+            "meterno": 3,
+            "interval": 30,
+            "metermake": "ELMEASURE"
+        },
+        {
+            "con": {
+                "lock": false,
+                "parity": "even",
+                "baudRate": 9600,
+                "dataBits": 8,
+                "stopBits": 1
+            },
+            "device": "",
+            "label": "demo2",
+            "metermodel": "EN 7500",
+            "metername": "Demand Controllers",
+            "metertype": "Energy Meter",
+            "meterno": 4,
+            "interval": 30,
+            "metermake": "ELMEASURE"
+        },
+        {
+            "con": {
+                "lock": false,
+                "parity": "even",
+                "baudRate": 9600,
+                "dataBits": 8,
+                "stopBits": 1
+            },
+            "device": "",
+            "label": "label2",
+            "metermodel": "4040LED Series",
+            "metername": "4040 Series",
+            "metertype": "Dual Source Basic MFM",
+            "meterno": 5,
+            "interval": 30,
+            "metermake": "L&T"
+        },
+        {
+            "con": {
+                "lock": false,
+                "parity": "even",
+                "baudRate": 9600,
+                "dataBits": 8,
+                "stopBits": 1
+            },
+            "device": "",
+            "label": "label 1",
+            "metermodel": "EN 8400",
+            "metername": "Demand Controllers",
+            "metertype": "Energy Meter",
+            "meterno": 2,
+            "interval": 30,
+            "metermake": "ELMEASURE"
+        },
+        {
+            "con": {
+                "lock": "false",
+                "parity": "Even",
+                "baudRate": 9600,
+                "dataBits": 8,
+                "stopBits": 1
+            },
+            "device": "",
+            "label": "lock",
+            "metermodel": "4040LED Series",
+            "metername": "4040 Series",
+            "metertype": "Dual Source Basic MFM",
+            "meterno": 6,
+            "interval": 30,
+            "metermake": "L&T"
+        }
+    ]
+}
+
+    
