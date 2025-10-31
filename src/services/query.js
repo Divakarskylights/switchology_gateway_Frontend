@@ -819,6 +819,18 @@ const DELETE_KPI_BY_UID = gql`
   }
 `;
 
+const DELETE_KPI_BY_COMBINE_ID = gql`
+  mutation DeleteKpiByCombineId($combine_id: String!) {
+    deleteFromKpiTable(filter: { combine_id: { equalTo: $combine_id } }) {
+      deletedKpis {
+        uid
+        combine_id
+      }
+    }
+  }
+`;
+
+
 
 const GET_GATEWAYS = gql`
   query GetGateways {
@@ -883,6 +895,7 @@ export {
   GET_KPI_DATA,
   DELETE_KPI,
   DELETE_KPI_BY_UID,
+  DELETE_KPI_BY_COMBINE_ID,
   GET_GATEWAYS,
   UPDATE_GATEWAY
 }

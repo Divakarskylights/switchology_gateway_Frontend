@@ -2,12 +2,73 @@ import React, { useState, useEffect } from 'react'
 import { Box, Paper, Typography, TextField, Button, Stack, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Select, MenuItem, Checkbox, Menu } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { configInit } from '../../components/layout/globalvariable';
 import { graphqlClient } from '../../services/client';
-import { INSERT_KPI, GET_KPI_DATA, DELETE_KPI, DELETE_KPI_BY_UID } from '../../services/query';
+import { INSERT_KPI, GET_KPI_DATA, DELETE_KPI_BY_COMBINE_ID, DELETE_KPI_BY_UID } from '../../services/query';
 import { toast } from 'react-toastify';
+
+
+const KpiPage = () => {
+  // console.log("KpiPage component loaded");
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [fields, setFields] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogParameters, setDialogParameters] = useState([{ parameter: '', value: '', unit: '' }]);
+  const [unitInfoOpen, setUnitInfoOpen] = useState(false);
+  const [kpiData, setKpiData] = useState([]);
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [menuRowIdx, setMenuRowIdx] = useState(null);
+  const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [viewRowData, setViewRowData] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteRowData, setDeleteRowData] = useState(null);
+  const [durationUnit, setDurationUnit] = useState('minutes');
+  const [deleteParamsDialogOpen, setDeleteParamsDialogOpen] = useState(false);
+  const [selectedParamsToDelete, setSelectedParamsToDelete] = useState([]);
+  const [fieldsDisabled, setFieldsDisabled] = useState(false);
+  const textfieldStyle = {
+    '& .MuiInputBase-root': {
+      height: 28,
+      fontSize: 12,
+      minHeight: 0,
+    },
+    '& .MuiInputBase-input': {
+      py: 0.2,
+      fontSize: 12,
+    },
+  };
+  // Handle changes for fields
+  const handleFieldChange = (idx, key, value) => {
+    setFields(prevFields =>
+      prevFields.map((item, index) =>
+        index === idx ? { ...item, [key]: value } : item
+      )
+    );
+  };
+
+  // Handle dialog parameter changes
+  const handleDialogParameterChange = (idx, key, value) => {
+    setDialogParameters(prevParams =>
+      prevParams.map((param, index) =>
+        index === idx ? { ...param, [key]: value } : param
+      )
+    );
+  };
+
+  // Add new parameter to dialog
+  const addDialogParameter = () => {
+    if (dialogParameters.length < 10) {
+      setDialogParameters(prev => [...prev, { parameter: '', value: '', unit: '' }]);
+    }
+  };
+
+  // Remove parameter from dialog
+  const removeDialogParameter = (idx) => {
+    if (dialogParameters.length > 1) {
+      setDialogParameters(prev => prev.filter((_, index) => index !== idx));
+    }
+  };
 
 
 
@@ -72,27 +133,27 @@ const unitInfo = [
 ];
 
 // Add this function near the top-level of the component or outside
-async function deleteKpiRow(combine_id) {
-    if (!combine_id) throw new Error('combine_id is required!');
-    console.log("combine_id:", combine_id);
+async function deleteKpiRow(combineId) {
+  if (!combineId) throw new Error('combineId is required!');
+  console.log("combineId:", combineId);
 
-    try {
-      const data = await graphqlClient.request(DELETE_KPI_BY_UID, { 
-        input: { uid: combine_id }
-      });
-      console.log("deleteKpiByUid response:", data);
-      toast.success('KPI deleted successfully!');
+  try {
+    const data = await graphqlClient.request(DELETE_KPI_BY_COMBINE_ID, { combineId });
 
-      if (!data?.deleteKpiByUid?.kpi) {
-        throw new Error('Failed to delete KPI row');
-      }
-      return data.deleteKpiByUid.kpi;
-    } catch (error) {
-      console.error('Delete KPI error:', error.response?.errors || error);
-      toast.error(`Failed to delete KPI: ${error.message}`);
-      throw error;
+    console.log("deleteKpiByCombineId response:", data);
+
+    if (!data?.deleteFromKpiTable?.deletedKpis?.length) {
+      throw new Error('No KPI rows found for this combine_id');
     }
+
+    toast.success('KPI deleted successfully!');
+    return data.deleteFromKpiTable.deletedKpis;
+  } catch (error) {
+    console.error('Delete KPI error:', error.response?.errors || error);
+    toast.error(`Failed to delete KPI: ${error.message}`);
+    throw error;
   }
+}
 
 
 // Add this function near the top-level of the component or outside
@@ -117,69 +178,6 @@ async function deleteField(uid) {
   }
 }
 
-
-
-const KpiPage = () => {
-  // console.log("KpiPage component loaded");
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [fields, setFields] = useState([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogParameters, setDialogParameters] = useState([{ parameter: '', value: '', unit: '' }]);
-  const [unitInfoOpen, setUnitInfoOpen] = useState(false);
-  const [kpiData, setKpiData] = useState([]);
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
-  const [menuRowIdx, setMenuRowIdx] = useState(null);
-  const [viewDialogOpen, setViewDialogOpen] = useState(false);
-  const [viewRowData, setViewRowData] = useState(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [deleteRowData, setDeleteRowData] = useState(null);
-  const [durationUnit, setDurationUnit] = useState('minutes');
-  const [deleteParamsDialogOpen, setDeleteParamsDialogOpen] = useState(false);
-  const [selectedParamsToDelete, setSelectedParamsToDelete] = useState([]);
-  const [fieldsDisabled, setFieldsDisabled] = useState(false);
-  const textfieldStyle = {
-    '& .MuiInputBase-root': {
-      height: 28,
-      fontSize: 12,
-      minHeight: 0,
-    },
-    '& .MuiInputBase-input': {
-      py: 0.2,
-      fontSize: 12,
-    },
-  };
-  // Handle changes for fields
-  const handleFieldChange = (idx, key, value) => {
-    setFields(prevFields =>
-      prevFields.map((item, index) =>
-        index === idx ? { ...item, [key]: value } : item
-      )
-    );
-  };
-
-  // Handle dialog parameter changes
-  const handleDialogParameterChange = (idx, key, value) => {
-    setDialogParameters(prevParams =>
-      prevParams.map((param, index) =>
-        index === idx ? { ...param, [key]: value } : param
-      )
-    );
-  };
-
-  // Add new parameter to dialog
-  const addDialogParameter = () => {
-    if (dialogParameters.length < 10) {
-      setDialogParameters(prev => [...prev, { parameter: '', value: '', unit: '' }]);
-    }
-  };
-
-  // Remove parameter from dialog
-  const removeDialogParameter = (idx) => {
-    if (dialogParameters.length > 1) {
-      setDialogParameters(prev => prev.filter((_, index) => index !== idx));
-    }
-  };
 
   // Fetch KPI data
   const fetchData = async () => {
@@ -305,11 +303,11 @@ const KpiPage = () => {
 
 
 
-  const handleSubmit = async () => {
-    // Build validParameters from fields
-    console.log("fields",fields);
-    
-    const validParameters = fields.filter(
+ const handleSubmit = async () => {
+  console.log("fields", fields);
+
+  const validParameters = fields
+    .filter(
       param =>
         param &&
         typeof param.parameter === 'string' &&
@@ -317,32 +315,43 @@ const KpiPage = () => {
         param.value !== undefined &&
         param.value !== null &&
         String(param.value).trim() !== ''
-    ).map(param => ({
-      ...param, // includes parameter, value, unit
-    }));
-    if (validParameters.length > 0) {
-      try {
-        // Generate a unique combine_id for this submission
-        const combineId = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        // Insert two rows for each parameter: one with fromDate, one with toDate
-        const fromISO = fromDate ? new Date(fromDate).toISOString() : null;
-        const toISO = toDate ? new Date(toDate).toISOString() : null;
-        const fromRows = validParameters.map(param => ({ ...param, created_date: fromISO, combine_id: combineId }));
-        const toRows = validParameters.map(param => ({ ...param, created_date: toISO, combine_id: combineId }));
-        await createKPI([...fromRows, ...toRows], {}, null, false);
-        fetchData();
-        setFields(prevFields => prevFields.map(f => ({ ...f, value: '' })));
-        setFieldsDisabled(true); // Disable fields and submit after submit (before clearing dates)
-        setFromDate('');
-        setToDate('');
-      } catch (error) {
-        toast.error('Failed to save KPI data.');
-        console.error('Error saving KPI data:', error);
-      }
-    } else {
-      toast.error('Please fill in at least one parameter completely');
+    )
+    .map(param => ({ ...param }));
+
+  if (validParameters.length > 0) {
+    try {
+      const fromISO = fromDate ? new Date(fromDate).toISOString() : null;
+      const toISO = toDate ? new Date(toDate).toISOString() : null;
+
+      // ✅ generate unique combineId per parameter
+      const allRows = validParameters.flatMap(param => {
+        const combineId =
+          (window.crypto && window.crypto.randomUUID)
+            ? window.crypto.randomUUID()
+            : `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+        return [
+          { ...param, created_date: fromISO, combine_id: combineId },
+          { ...param, created_date: toISO, combine_id: combineId }
+        ];
+      });
+
+      console.log("Prepared rows:", allRows);
+
+      await createKPI(allRows, {}, null, false);
+      fetchData();
+      setFields(prevFields => prevFields.map(f => ({ ...f, value: '' })));
+      setFieldsDisabled(true);
+      setFromDate('');
+      setToDate('');
+    } catch (error) {
+      toast.error('Failed to save KPI data.');
+      console.error('Error saving KPI data:', error);
     }
-  };
+  } else {
+    toast.error('Please fill in at least one parameter completely');
+  }
+};
 
   // Find all unique parameter names from KPI data
   const paramKeys = Array.from(
@@ -395,13 +404,22 @@ const KpiPage = () => {
       handleDeleteDialogClose();
       return;
     }
-    console.log('Deleting KPI row:', row.uid, 'deleteRowData', row);
     try {
-      await deleteKpiRow(row.uid);
+      // Row from merged view contains comma-separated UIDs; delete each
+      const uids = String(row.uid)
+        .split(',')
+        .map(u => u.trim())
+        .filter(Boolean);
+
+      for (const uid of uids) {
+        await deleteField(uid);
+      }
+
       fetchData();
       handleDeleteDialogClose();
     } catch (error) {
-      toast.error('Failed to delete KPI row.');
+      console.error('Failed to delete KPI row(s):', error);
+      toast.error('Failed to delete KPI row(s).');
     }
   };
 
@@ -472,59 +490,68 @@ const KpiPage = () => {
     }
   }, [fromDate, toDate]);
 
-  /// Group KPI entries by 'parameters' and 'updated_date'
-  const mergedKpiDataMap = {};
+  // Merge KPI rows when combineId is same
+const mergedKpiDataMap = {};
 
-  // Group rows by combine_id
-  kpiData
-    .filter(row => row.added === false)
-    .forEach(row => {
-      const key = row.combine_id || row.uid; // fallback if combine_id missing
+kpiData
+  .filter(row => row.added === false) // Only merge "non-added" rows
+  .forEach(row => {
+    const key = row.combineId || row.uid; // fallback if combineId missing
 
-      if (!mergedKpiDataMap[key]) {
-        mergedKpiDataMap[key] = {
-          ...row,
-          uids: [row.uid],
-          values: [row.values],
-          created_dates: [row.created_date],
-        };
-      } else {
-        mergedKpiDataMap[key].uids.push(row.uid);
-        mergedKpiDataMap[key].values.push(row.values);
-        mergedKpiDataMap[key].created_dates.push(row.created_date);
-      }
-    });
-
-  // Format the merged rows
-  const mergedKpiData = Object.values(mergedKpiDataMap).map(group => {
-    const sortedDates = group.created_dates
-      .filter(Boolean)
-      .map(d => new Date(d))
-      .sort((a, b) => a - b);
-
-    let createdDateDisplay = '-';
-    if (sortedDates.length > 0) {
-      const from = sortedDates[0].toLocaleString();
-      const to = sortedDates[sortedDates.length - 1].toLocaleString();
-      createdDateDisplay = from === to ? from : `${from} — ${to}`;
+    if (!mergedKpiDataMap[key]) {
+      mergedKpiDataMap[key] = {
+        ...row,
+        uids: [row.uid],
+        values: [row.values],
+        createdDates: [row.createdDate],
+      };
+    } else {
+      mergedKpiDataMap[key].uids.push(row.uid);
+      mergedKpiDataMap[key].values.push(row.values);
+      mergedKpiDataMap[key].createdDates.push(row.createdDate);
     }
-
-    // Only show value once if all values are the same, else join
-    let valueDisplay = '-';
-    if (group.values && group.values.length > 0) {
-      const allSame = group.values.every(v => v === group.values[0]);
-      valueDisplay = allSame ? group.values[0] : group.values.join(', ');
-    }
-
-    return {
-      ...group,
-      createdDateDisplay,
-      uid: group.uids.join(', '),
-      values: valueDisplay,
-    };
   });
-  console.log("mergedKpiData", mergedKpiData);
-  console.log("fields",fields);
+
+// Format merged result
+const mergedKpiData = Object.values(mergedKpiDataMap).map(group => {
+  // Sort created dates
+  const validDates = group.createdDates.filter(Boolean).map(d => new Date(d));
+  const sortedDates = validDates.sort((a, b) => a - b);
+
+  // Build from–to range string
+  let createdDateDisplay = '-';
+  if (sortedDates.length > 0) {
+    const from = sortedDates[0].toLocaleString();
+    const to = sortedDates[sortedDates.length - 1].toLocaleString();
+    createdDateDisplay = from === to ? from : `${from} — ${to}`;
+  }
+
+  // Merge value display
+  let valueDisplay = '-';
+  if (group.values?.length > 0) {
+    const allSame = group.values.every(v => v === group.values[0]);
+    valueDisplay = allSame ? group.values[0] : group.values.join(', ');
+  }
+
+  return {
+    combineId: group.combineId,
+    parameters: group.parameters,
+    units: group.units,
+    updatedDate: group.updatedDate,
+    uid: group.uids.join(', '),
+    values: valueDisplay,
+    createdDateDisplay,
+  };
+});
+
+// Also include rows where added === true (unmerged ones)
+const finalKpiData = [
+  ...mergedKpiData,
+  ...kpiData.filter(row => row.added === true),
+];
+
+console.log("✅ Final KPI Data:", finalKpiData);
+
   
 
   return (
