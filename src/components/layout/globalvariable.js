@@ -7,7 +7,7 @@ const isProd = window.location.hostname.endsWith('switchology.in');
 //   ? 'https://' + window.location.hostname   // Cloudflare Tunnel → HTTPS
 //   : window.location.protocol + '//' + window.location.hostname; // localhost/dev
 
-const appBaseUrl = 'http://192.168.1.15'
+const appBaseUrl = 'http://192.168.1.28'
 console.log(appBaseUrl, isProd);
 
 export const configInit = {
@@ -85,7 +85,6 @@ export const configInit = {
       }
       console.log(configInit.appBaseUrl);
       return token;
-
     } catch (error) {
       if (error.response && error.response.status === 403) {
         try {

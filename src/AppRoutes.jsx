@@ -13,7 +13,6 @@ import { ScadaDiagram } from "./pages/scada/ScadaPage";
 import KpiPage from "./pages/dashboard/KpiPage";
 import LoginPage from "./pages/auth/LoginPage";
 import MetersBillGeneratePage from "./pages/MetersBillGeneratePage";
-
 import { useAppInitialization } from "./hooks/useAppInitialization";
 import useAuth from "./hooks/useAuth";
 

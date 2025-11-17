@@ -4,6 +4,7 @@ import useRole from '../../redux/store/useRole';
 import useAuth from '../../hooks/useAuth';
 import { useAppInitialization } from '../../hooks/useAppInitialization';
 import Error404Page from './404ErrorPage';
+import { CircularProgress } from '@mui/material';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { role } = useRole();
@@ -37,7 +38,11 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   // Show loading while checking profile and gateway status
   if (!profileChecked) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress size={34} />
+      </div>
+    );
   }
 
   if (gatewayStatus?.networkError) {
