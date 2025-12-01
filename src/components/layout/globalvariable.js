@@ -3,11 +3,11 @@ import axios from "axios";
 const effectiveProtocol = 'http:';
 
 const isProd = window.location.hostname.endsWith('switchology.in');
-// const appBaseUrl = isProd 
-//   ? 'https://' + window.location.hostname   // Cloudflare Tunnel → HTTPS
-//   : window.location.protocol + '//' + window.location.hostname; // localhost/dev
+const appBaseUrl = isProd
+  ? 'https://' + window.location.hostname   // Cloudflare Tunnel → HTTPS
+  : window.location.protocol + '//' + window.location.hostname; // localhost/dev
 
-const appBaseUrl = 'http://192.168.1.28'
+// const appBaseUrl = 'http://192.168.1.62'
 console.log(appBaseUrl, isProd);
 
 export const configInit = {

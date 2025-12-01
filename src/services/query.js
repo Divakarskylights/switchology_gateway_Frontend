@@ -865,6 +865,99 @@ const UPDATE_GATEWAY = gql`
     }
   }
 `;
+
+const INSERT_PLC_CONFIG = gql`
+  mutation CreatePlcConfig($input: CreatePlcConfigInput!) {
+    createPlcConfig(input: $input) {
+      plcConfig {
+        id
+        totalIo
+        inputCount
+        outputCount
+        confirmed
+        pinModes
+      }
+    }
+  }
+`;
+
+const GET_PLC_CONFIGS = gql`
+  query GetPlcConfigs {
+    allPlcConfigs {
+      nodes {
+        id
+        totalIo
+        inputCount
+        outputCount
+        confirmed
+        pinModes
+      }
+    }
+  }
+`;
+
+const UPDATE_PLC_CONFIG_BY_ID = gql`
+  mutation UpdatePlcConfigById($input: UpdatePlcConfigByIdInput!) {
+    updatePlcConfigById(input: $input) {
+      plcConfig {
+        id
+        totalIo
+        inputCount
+        outputCount
+        confirmed
+        pinModes
+      }
+    }
+  }
+`;
+
+const GET_RELAY_PLCLOGIC_LATEST = gql`
+  query GetRelayPlclogicLatest {
+    allRelayPlclogics(orderBy: UPDATED_AT_DESC, first: 1) {
+      nodes {
+        id
+        name
+        description
+        nodeData
+        linkData
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+const INSERT_RELAY_PLCLOGIC = gql`
+  mutation CreateRelayPlclogic($input: CreateRelayPlclogicInput!) {
+    createRelayPlclogic(input: $input) {
+      relayPlclogic {
+        id
+        name
+        description
+        nodeData
+        linkData
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+const UPDATE_RELAY_PLCLOGIC_BY_ID = gql`
+  mutation UpdateRelayPlclogicById($input: UpdateRelayPlclogicByIdInput!) {
+    updateRelayPlclogicById(input: $input) {
+      relayPlclogic {
+        id
+        name
+        description
+        nodeData
+        linkData
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
 export {
   INSERT_PROFILE_DATA, GET_PROFILE_DATA, INSERT_METER_INFO, UPDATE_METER_INFO, DELETE_METER_INFO, GET_METER_INFO, UPDATE_METER_INTERVAL,
   UPDATE_PROFILE, UPDATE_PROFILE_BY_USERID, UPDATE_PASSWORD, UPDATE_FORGOT_PASSWORD,
@@ -897,5 +990,12 @@ export {
   DELETE_KPI_BY_UID,
   DELETE_KPI_BY_COMBINE_ID,
   GET_GATEWAYS,
-  UPDATE_GATEWAY
+  UPDATE_GATEWAY,
+  INSERT_PLC_CONFIG,
+  GET_PLC_CONFIGS,
+  UPDATE_PLC_CONFIG_BY_ID,
+  // Relay PLC Logic
+  GET_RELAY_PLCLOGIC_LATEST,
+  INSERT_RELAY_PLCLOGIC,
+  UPDATE_RELAY_PLCLOGIC_BY_ID
 }

@@ -114,23 +114,17 @@ const SetupPage = () => {
       const data = await graphqlClient.request(GET_METER_INFO);
       const meters = data?.allMeterConfigrations?.nodes || [];
       console.log("meters=>", meters, meterOptions);
-      const validMeters = meters.filter(m =>
-        m.con &&
-        meterOptions.some(opt =>
-          opt.device_make === m.meterMake &&
-          opt.device_model === m.meterModel &&
-          Array.isArray(opt.baud_rate)
-          && opt.baud_rate.map(Number).includes(Number(JSON.parse(m.con).baudRate))
-        )
-      ).map(m => ({
-        ...m,
-        meter_no: m.meterNo,
-        meter_name: m.meterName,
-        meter_model: m.meterModel,
-        meter_make: m.meterMake,
-        meter_type: m.meterType,
-        con: typeof m.con === 'string' ? JSON.parse(m.con) : m.con
-      }));
+      const validMeters = meters
+        .filter(m => m.con)
+        .map(m => ({
+          ...m,
+          meter_no: m.meterNo,
+          meter_name: m.meterName,
+          meter_model: m.meterModel,
+          meter_make: m.meterMake,
+          meter_type: m.meterType,
+          con: typeof m.con === 'string' ? JSON.parse(m.con) : m.con
+        }));
       console.log("validMeters=>", validMeters);
 
       setMeterConfigurations(validMeters);

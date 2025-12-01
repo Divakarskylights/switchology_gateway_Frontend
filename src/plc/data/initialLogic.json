@@ -1,0 +1,66 @@
+{
+  "nodes": [
+    { "id": "N1", "type": "INPUT", "params": { "name": "IN1" }, "position": { "x": 100, "y": 60 } },
+    { "id": "N2", "type": "INPUT", "params": { "name": "IN2" }, "position": { "x": 100, "y": 180 } },
+    { "id": "N3", "type": "INPUT", "params": { "name": "IN3" }, "position": { "x": 100, "y": 300 } },
+    { "id": "N4", "type": "INPUT", "params": { "name": "IN4" }, "position": { "x": 100, "y": 420 } },
+    { "id": "N5", "type": "INPUT", "params": { "name": "IN5" }, "position": { "x": 100, "y": 540 } },
+    { "id": "N6", "type": "INPUT", "params": { "name": "IN6" }, "position": { "x": 100, "y": 660 } },
+    { "id": "N7", "type": "INPUT", "params": { "name": "IN7" }, "position": { "x": 100, "y": 780 } },
+
+    { "id": "N8", "type": "AND", "params": {}, "position": { "x": 500, "y": 120 } },
+    { "id": "N9", "type": "OR", "params": {}, "position": { "x": 500, "y": 300 } },
+    { "id": "N10", "type": "NOT", "params": {}, "position": { "x": 500, "y": 420 } },
+    { "id": "N11", "type": "TON", "params": { "delay": 3000 }, "position": { "x": 500, "y": 540 } },
+    { "id": "N12", "type": "XOR", "params": {}, "position": { "x": 500, "y": 720 } },
+    { "id": "N13", "type": "SET", "params": {}, "position": { "x": 500, "y": 60 } },
+    { "id": "N14", "type": "RESET", "params": {}, "position": { "x": 500, "y": 180 } },
+    { "id": "N15", "type": "TON", "params": { "delay": 5000 }, "position": { "x": 500, "y": 480 } },
+    { "id": "N16", "type": "AND", "params": {}, "position": { "x": 500, "y": 600 } },
+
+    { "id": "N17", "type": "OUTPUT", "params": { "name": "OUT1" }, "position": { "x": 900, "y": 120 } },
+    { "id": "N18", "type": "OUTPUT", "params": { "name": "OUT2" }, "position": { "x": 900, "y": 300 } },
+    { "id": "N19", "type": "OUTPUT", "params": { "name": "OUT3" }, "position": { "x": 900, "y": 540 } },
+    { "id": "N20", "type": "OUTPUT", "params": { "name": "OUT4" }, "position": { "x": 900, "y": 720 } },
+    { "id": "N21", "type": "OUTPUT", "params": { "name": "OUT5" }, "position": { "x": 900, "y": 60 } },
+    { "id": "N22", "type": "OUTPUT", "params": { "name": "OUT6" }, "position": { "x": 900, "y": 180 } },
+    { "id": "N23", "type": "OUTPUT", "params": { "name": "OUT7" }, "position": { "x": 900, "y": 480 } }
+  ],
+  "links": [
+    { "from": "N1", "to": "N8" },
+    { "from": "N2", "to": "N8" },
+    { "from": "N8", "to": "N17" },
+
+    { "from": "N3", "to": "N9" },
+    { "from": "N4", "to": "N10" },
+    { "from": "N10", "to": "N9" },
+    { "from": "N9", "to": "N18" },
+
+    { "from": "N5", "to": "N11" },
+    { "from": "N11", "to": "N19" },
+
+    { "from": "N6", "to": "N12" },
+    { "from": "N7", "to": "N12" },
+    { "from": "N12", "to": "N20" },
+
+    { "from": "N1", "to": "N13" },
+    { "from": "N13", "to": "N21" },
+
+    { "from": "N2", "to": "N14" },
+    { "from": "N14", "to": "N22" },
+
+    { "from": "N4", "to": "N15" },
+    { "from": "N15", "to": "N16" },
+    { "from": "N1", "to": "N16" },
+    { "from": "N16", "to": "N23" }
+  ],
+  "logic": [
+    { "output": "OUT1", "expression": "IN1 AND IN2" },
+    { "output": "OUT2", "expression": "IN3 OR NOT IN4" },
+    { "output": "OUT3", "expression": "TON(IN5, 3000ms)" },
+    { "output": "OUT4", "expression": "IN6 XOR IN7" },
+    { "output": "OUT5", "expression": "SET(IN1)" },
+    { "output": "OUT6", "expression": "RESET(IN2)" },
+    { "output": "OUT7", "expression": "IN1 AND TON(IN4, 5000ms)" }
+  ]
+}

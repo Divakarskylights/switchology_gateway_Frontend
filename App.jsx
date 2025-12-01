@@ -4,6 +4,7 @@ import { Fade, Box } from '@mui/material';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppRoutes from './src/AppRoutes';
+import { PLCApp } from './src/plc';
 // import Chatbot from './test';
 function App() {
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -18,6 +19,8 @@ function App() {
         <Box sx={{ height: '100%'}}>
           <AppRoutes />
           {/* <Chatbot /> */}
+          {/* <PLCApp /> */}
+          
         </Box>
       </Fade>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
