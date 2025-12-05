@@ -114,17 +114,26 @@ const SetupPage = () => {
       const data = await graphqlClient.request(GET_METER_INFO);
       const meters = data?.allMeterConfigrations?.nodes || [];
       console.log("meters=>", meters, meterOptions);
-      const validMeters = meters
-        .filter(m => m.con)
-        .map(m => ({
+      const validMeters = meters.map(m => {
+        let parsedCon = m.con;
+        if (typeof parsedCon === 'string') {
+          try {
+            parsedCon = JSON.parse(parsedCon);
+          } catch (e) {
+            console.error('Failed to parse meter.con for meter', m.id || m.meterNo, e);
+            parsedCon = null;
+          }
+        }
+        return {
           ...m,
           meter_no: m.meterNo,
           meter_name: m.meterName,
           meter_model: m.meterModel,
           meter_make: m.meterMake,
           meter_type: m.meterType,
-          con: typeof m.con === 'string' ? JSON.parse(m.con) : m.con
-        }));
+          con: parsedCon,
+        };
+      });
       console.log("validMeters=>", validMeters);
 
       setMeterConfigurations(validMeters);

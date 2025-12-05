@@ -7,7 +7,7 @@ const appBaseUrl = isProd
   ? 'https://' + window.location.hostname   // Cloudflare Tunnel → HTTPS
   : window.location.protocol + '//' + window.location.hostname; // localhost/dev
 
-// const appBaseUrl = 'http://192.168.1.62'
+// const appBaseUrl = 'http://192.168.1.72'
 console.log(appBaseUrl, isProd);
 
 export const configInit = {
