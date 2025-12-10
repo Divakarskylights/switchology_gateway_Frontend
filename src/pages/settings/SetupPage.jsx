@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Box, Button, Chip, CircularProgress, TextField, Typography, Fade, Paper, Backdrop } from '@mui/material';
+import { TOAST_IDS } from '../../constants/toastIds';
 import MeterJsonEditorDialog, { insertMeterJsonData } from '../../features/setup/components/MeterJsonEditorDialog';
 import { graphqlClient } from '../../services/client';
 import {
@@ -38,6 +39,7 @@ const SetupPage = () => {
   const [loaded, setLoaded] = useState(false);
   const [liveStatuses, setLiveStatuses] = useState({});
   const [saving, setSaving] = useState(false);
+  const [dockerLoading, setDockerLoading] = useState(false);
   const [editorInstance, setEditorInstance] = useState(null);
   const [jsonDialogOpen, setJsonDialogOpen] = useState(false);
   const [jsonString, setJsonString] = useState('');
@@ -206,12 +208,17 @@ const SetupPage = () => {
       );
       setIntervalVal(newInterval);
       setIsEditingInterval(false);
-      toast.success(`Global interval updated to ${newInterval} seconds for all meters.`);
-      await controlDocker('server_container', 'restart');
+      toast.success(`Global interval updated to ${newInterval} seconds for all meters.`, { toastId: TOAST_IDS.INTERVAL_UPDATE });
+      setDockerLoading(true);
+      try {
+        await controlDocker('server_container', 'restart');
+      } finally {
+        setDockerLoading(false);
+      }
       await fetchMeters();
     } catch (error) {
       console.error('Failed to update global interval:', error);
-      toast.error('Failed to update global interval.');
+      toast.error('Failed to update global interval.', { toastId: TOAST_IDS.INTERVAL_UPDATE });
     }
   };
 
@@ -234,7 +241,7 @@ const SetupPage = () => {
   const checkTestMeter = async () => {
     const meterToTest = isAddDialog ? newMeterConfig : editingMeterConfig;
     if (!meterToTest || !meterToTest.label || !meterToTest.meter_make || !meterToTest.meter_model) {
-      toast.error("Please fill all required fields for the meter.");
+      toast.error("Please fill all required fields for meter test.", { toastId: TOAST_IDS.METER_TEST });
       return;
     }
     const selectedModelDetails = meterOptions.find(d => d.device_make === meterToTest.meter_make && d.device_model === meterToTest.meter_model);
@@ -259,16 +266,16 @@ const SetupPage = () => {
         result.result === "No Meter Found. Please check settings and try again."
       ) {
         setResponseMessage('failed');
-        toast.error(result.message || 'Test failed. Meter responded null or with an error.');
+        toast.error(result.message || 'Test failed. Meter responded null or with an error.', { toastId: TOAST_IDS.METER_TEST });
       } else {
         setLoaderPercentage(result.timeTaken);
         setResponseMessage('success');
-        toast.success(result.message || 'Test successful.');
+        toast.success(result.message || 'Test successful.', { toastId: TOAST_IDS.METER_TEST });
       }
       setTestResponse(true);
     } catch (error) {
       console.error('Test meter API call failed:', error);
-      toast.error('Test meter API call failed.');
+      toast.error('Test meter API call failed.', { toastId: TOAST_IDS.METER_TEST });
       setResponseMessage('failed');
       setTestResponse(true);
     }
@@ -283,7 +290,7 @@ const SetupPage = () => {
     const meterToSave = isNew ? newMeterConfig : editingMeterConfig;
 
     if (!meterToSave || !meterToSave.label || !meterToSave.meter_make || !meterToSave.meter_model) {
-      toast.error("Please fill all required fields for the meter.");
+      toast.error("Please fill all required fields for meter.", { toastId: TOAST_IDS.METER_ADD });
       setSaving(false);
       return;
     }
@@ -316,17 +323,22 @@ const SetupPage = () => {
           }
         });
       }
-      setTimeout(async () => await controlDocker('server_container', 'restart'), 900);
-      toast.success(`Meter ${variables?.label} (ID: ${variables?.meterNo}) ${isNew ? 'added' : 'updated'}`);
+      toast.success(`Meter ${variables?.label} (ID: ${variables?.meterNo}) ${isNew ? 'added' : 'updated'}`, { toastId: isNew ? TOAST_IDS.METER_ADD : TOAST_IDS.METER_UPDATE });
       setIsAddDialog(false);
       setEditingMeterConfig(null);
       setExpandedMeterIndex(null);
       setTestResponse(false);
       setResponseMessage('');
+      setDockerLoading(true);
+      try {
+        await controlDocker('server_container', 'restart');
+      } finally {
+        setDockerLoading(false);
+      }
       await fetchMeters();
     } catch (error) {
       console.error('Save meter failed:', error);
-      toast.error('Save meter failed: ' + (error.response?.errors?.[0]?.message || error.message));
+      toast.error('Save meter failed: ' + (error.response?.errors?.[0]?.message || error.message), { toastId: isNew ? TOAST_IDS.METER_ADD : TOAST_IDS.METER_UPDATE });
     } finally {
       setSaving(false);
     }
@@ -425,12 +437,15 @@ const SetupPage = () => {
         await fetch(`${configInit.appBaseUrl}/v2/api/db/measurements/${meterIdForRelatedData}`, {
           method: 'DELETE', headers: { 'Content-Type': 'application/json' },
         });
-        toast.success(`Meter ${meterLabelToDelete} (ID: ${meterNoToDelete}) deleted`);
-        setLoading(true);
-        setTimeout(async () => await controlDocker('server_container', 'restart'), 900);
-        setLoading(false);
+        // Success toast shown by controlDocker
+        setDockerLoading(true);
+        try {
+          await controlDocker('server_container', 'restart');
+        } finally {
+          setDockerLoading(false);
+        }
       } else {
-        toast.error("Meter deletion failed!");
+        toast.error("Meter deletion failed!", { toastId: TOAST_IDS.METER_DELETE });
       }
       setExpandedMeterIndex(null);
       setEditingMeterConfig(null);
@@ -439,7 +454,7 @@ const SetupPage = () => {
       await fetchMeters();
     } catch (error) {
       console.error('Delete meter failed:', error);
-      toast.error('Delete meter failed: ' + (error.response?.errors?.[0]?.message || error.message));
+      toast.error('Delete meter failed: ' + (error.response?.errors?.[0]?.message || error.message), { toastId: TOAST_IDS.METER_DELETE });
     }
   };
 
@@ -447,17 +462,18 @@ const SetupPage = () => {
     try {
       if (enteredPassword === dbPassword) {
         if (currentAction === 'add') {
-          setSaving(true);
-          await controlDocker('server_container', 'stop');
-          setTimeout(() => {
-            handleOpenAddDialog();
-            setPasswordDialogOpen(false);
-            setSaving(false);
-          }, 1000);
+          setDockerLoading(true);
+          try {
+            await controlDocker('server_container', 'stop');
+            setTimeout(() => {
+              handleOpenAddDialog();
+              setPasswordDialogOpen(false);
+            }, 1000);
+          } finally {
+            setDockerLoading(false);
+          }
         } else if (currentAction === 'delete') {
-          setSaving(true);
           await handleConfirmDelete();
-          setSaving(false);
         } else if (currentAction === 'dashboard') {
           setSaving(true);
           await handleEditDashboard();
@@ -465,7 +481,7 @@ const SetupPage = () => {
           setSaving(false);
         }
       } else {
-        toast.error('Incorrect password');
+        toast.error('Incorrect password', { toastId: TOAST_IDS.GENERIC_ERROR });
       }
       if (currentAction !== 'delete' && currentAction !== 'dashboard') {
         setPasswordDialogOpen(false);
@@ -488,6 +504,11 @@ const SetupPage = () => {
         {/* Backdrop for saving meter */}
         <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 9999 }} open={saving}>
           <CircularProgress color="inherit" />
+        </Backdrop>
+        {/* Backdrop for Docker control operations */}
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 10000 }} open={dockerLoading}>
+          <CircularProgress color="inherit" />
+          <Typography sx={{ ml: 2 }}>Container control in progress...</Typography>
         </Backdrop>
         {/* Main Content Start */}
         <Paper elevation={3} sx={{ p: 1, mb: 1, borderRadius: 2 }}>
@@ -590,11 +611,11 @@ const SetupPage = () => {
                 meterId // Measurement name
               );
               setUnsavedChanges(false);
-              toast.success('JSON configuration saved successfully!');
+              toast.success('JSON configuration saved successfully!', { toastId: TOAST_IDS.METER_UPDATE });
               setJsonDialogOpen(false);
             } catch (error) {
               console.error('Failed to save JSON configuration:', error);
-              toast.error('Failed to save JSON configuration');
+              toast.error('Failed to save JSON configuration', { toastId: TOAST_IDS.GENERIC_ERROR });
             }
           }}
           saveDisabled={!!jsonError}
@@ -604,7 +625,12 @@ const SetupPage = () => {
           open={isAddDialog}
           onClose={async () => {
             // Wait for the Docker restart to complete
-            await controlDocker('server_container', 'restart');
+            setDockerLoading(true);
+            try {
+              await controlDocker('server_container', 'restart');
+            } finally {
+              setDockerLoading(false);
+            }
             // Then close the dialog
             setIsAddDialog(false);
           }}

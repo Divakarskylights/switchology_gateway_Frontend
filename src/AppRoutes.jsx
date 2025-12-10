@@ -7,6 +7,7 @@ import AnalyticsDashboardPage from "./pages/analytics/AnalyticsDashboardPage";
 import SetupPage from "./pages/settings/SetupPage";
 import AuthKeyPage from "./pages/auth/AuthKeyPage";
 import SubscriptionPage from "./pages/settings/SubscriptionPage";
+import RelaySetupPage from "./pages/relay/RelaySetupPage";
 import { DashboardLayout } from "./layouts/DiagramLayout";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import { ScadaDiagram } from "./pages/scada/ScadaPage";
@@ -158,6 +159,12 @@ const AppRoutes = () => {
       <Route path="/admin/meter-config" element={
         <ProtectedRoute allowedRoles={['ADMIN']}>
           <DashboardLayout component={MetersBillGeneratePage} />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/admin/relay-setup" element={
+        <ProtectedRoute allowedRoles={['ADMIN']}>
+          <DashboardLayout component={RelaySetupPage} />
         </ProtectedRoute>
       } />
 

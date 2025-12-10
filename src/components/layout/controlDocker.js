@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { configInit } from "./globalvariable";
+import { TOAST_IDS } from "../../constants/toastIds";
 
 export const controlDocker = async (containerName, action) => {
   
@@ -16,6 +17,7 @@ export const controlDocker = async (containerName, action) => {
   });
 
   return toast.promise(requestPromise, {
+    toastId: TOAST_IDS.DOCKER_OPERATION,
     pending: `Processing ${action}...`,
     success: (data) => `Data Capture ${data.message}ed successfully`,
     error: (err) => `${err.message}`,

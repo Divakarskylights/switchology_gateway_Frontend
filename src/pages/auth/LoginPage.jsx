@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Card, CardContent, Grow, Tabs, Tab, useTheme } from '@mui/material'; // Added useTheme
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { TOAST_IDS } from '../../constants/toastIds';
 import { graphqlClient } from '../../services/client';
 import { UPDATE_PROFILE_BY_USERID } from '../../services/query';
 import SwitchologyLogo from '/Switchology.png';
@@ -75,7 +76,7 @@ const LoginPage = () => {
         e.preventDefault();
 
         if (!profileData) {
-            toast.error("Profile data not loaded. Please try again later.");
+            toast.error("Profile data not loaded. Please try again later.", { toastId: TOAST_IDS.PROFILE_UPDATE_ERROR });
             return;
         }
 
@@ -108,10 +109,10 @@ const LoginPage = () => {
                 // Navigate to dashboard using React Router
                 navigate('/dashboard', { replace: true });
             } catch (error) {
-                toast.error("Login failed: " + (error.message || "Unknown error"));
+                toast.error("Login failed: " + (error.message || "Unknown error"), { toastId: TOAST_IDS.LOGIN_ERROR });
             }
         } else {
-            toast.error("Invalid credentials");
+            toast.error('Invalid credentials', { toastId: TOAST_IDS.LOGIN_ERROR });
         }
     };
 
@@ -120,30 +121,30 @@ const LoginPage = () => {
         console.log("erere", expectedKey);
         
         if (!forgotAuthKey || forgotAuthKey !== expectedKey) {
-            toast.error('Invalid authentication key');
+            toast.error('Invalid authentication key', { toastId: TOAST_IDS.LOGIN_ERROR });
             return;
         }
         if (!newPassword || newPassword.length < 4) {
-            toast.error('Password must be at least 4 characters');
+            toast.error('Password must be at least 4 characters', { toastId: TOAST_IDS.PASSWORD_CHANGE });
             return;
         }
         if (newPassword !== confirmPassword) {
-            toast.error('Passwords do not match');
+            toast.error('Passwords do not match', { toastId: TOAST_IDS.PASSWORD_CHANGE });
             return;
         }
         // Prevent Admin and Viewer passwords from being the same
         if (resetTarget === 'ADMIN' && newPassword === profileData?.viewerPassword) {
-            toast.error('Admin and Viewer passwords cannot be the same');
+            toast.error('Admin and Viewer passwords cannot be the same', { toastId: TOAST_IDS.PASSWORD_CHANGE });
             return;
         }
         if (resetTarget === 'VIEWER' && newPassword === profileData?.adminPassword) {
-            toast.error('Viewer and Admin passwords cannot be the same');
+            toast.error('Viewer and Admin passwords cannot be the same', { toastId: TOAST_IDS.PASSWORD_CHANGE });
             return;
         }
         try {
             // Use userid from loaded profileData to reset password (no email)
             if (!profileData?.userid) {
-                toast.error('User not loaded');
+                toast.error('User not loaded', { toastId: TOAST_IDS.LOGIN_ERROR });
                 return;
             }
             const data = await graphqlClient.request(UPDATE_PROFILE_BY_USERID, {
@@ -155,17 +156,17 @@ const LoginPage = () => {
                 }
             });
             if (data?.updateProfileByUserid?.profile) {
-                toast.success(`${resetTarget === 'ADMIN' ? 'Admin' : 'Viewer'} password updated`);
+                toast.success(`${resetTarget === 'ADMIN' ? 'Admin' : 'Viewer'} password updated`, { toastId: TOAST_IDS.PASSWORD_CHANGE });
                 setShowForgotDialog(false);
                 setForgotAuthKey('');
                 setNewPassword('');
                 setConfirmPassword('');
                 window.location.reload();
             } else {
-                toast.error("Reset failed or email not found.");
+                toast.error("Reset failed or email not found.", { toastId: TOAST_IDS.PASSWORD_CHANGE });
             }
         } catch (error) {
-            toast.error("Reset failed: " + (error.message || "Unknown error"));
+            toast.error("Reset failed: " + (error.message || "Unknown error"), { toastId: TOAST_IDS.PASSWORD_CHANGE });
         }
     };
 

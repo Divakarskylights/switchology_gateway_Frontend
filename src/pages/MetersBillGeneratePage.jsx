@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Button, Box, Stack, useMediaQuery, useTheme, Dialog, DialogContent, DialogActions, DialogTitle, Typography, CircularProgress, LinearProgress, Grow, Fade, Paper } from "@mui/material";
 import { toast } from "react-toastify";
+import { TOAST_IDS } from "../constants/toastIds";
 import TariffDialog from "../features/billing/components/TariffDialog";
 import { InputFieldsRow } from "../features/billing/components/InputFieldsRow";
 import {
@@ -55,12 +56,12 @@ const handleApplyDateFilter = async (state, tableData, setTableData, tariffDataA
   const token = localStorage.getItem("accessToken") || "";
 
   if (!fromDate || !toDate) {
-    toast.error('Please select both From and To dates');
+    toast.error('Please select both From and To dates', { toastId: TOAST_IDS.BILL_GENERATE });
     return;
   }
 
   if (fromDate > toDate) {
-    toast.error('From date cannot be later than To date');
+    toast.error('From date cannot be later than To date', { toastId: TOAST_IDS.BILL_GENERATE });
     return;
   }
 
@@ -89,7 +90,7 @@ const handleApplyDateFilter = async (state, tableData, setTableData, tariffDataA
     console.log("response", response);
     const { results } = response.data;
     if (!results || results.length === 0) {
-      toast.warning('No valid data found for the selected meters');
+      toast.warning('No valid data found for the selected meters', { toastId: TOAST_IDS.BILL_GENERATE });
       setLoading(false);
       return;
     }
@@ -171,11 +172,11 @@ const handleApplyDateFilter = async (state, tableData, setTableData, tariffDataA
     }
 
     handleStateChange({ isApplied: true });
-    toast.success('Data filtered successfully');
+    toast.success('Data filtered successfully', { toastId: TOAST_IDS.REPORT_GENERATE });
 
   } catch (error) {
     console.error('Error fetching filtered data:', error);
-    toast.error('Error fetching filtered data: ' + (error.response?.data?.error || error.message));
+    toast.error('Error fetching filtered data: ' + (error.response?.data?.error || error.message), { toastId: TOAST_IDS.REPORT_GENERATE });
   } finally {
     setLoading(false);
   }
@@ -274,14 +275,14 @@ const MetersBillGeneratePage = () => {
         if (newRow) {
           setTableData((prev) => [...prev, newRow]);
         } else {
-          toast.warning("Form submitted but no data returned.");
+          toast.warning("Form submitted but no data returned.", { toastId: TOAST_IDS.BILL_GENERATE });
         }
       }
   
       handleStateChange({ openForm: false, editData: null });
-      toast.success(`Form ${state.editData ? "Updated" : "Submitted"} Successfully!`);
+      toast.success(`Form ${state.editData ? "Updated" : "Submitted"} Successfully!`, { toastId: TOAST_IDS.BILL_GENERATE });
     } catch (error) {
-      toast.error("Error in submitting the form: " + error.message);
+      toast.error("Error in submitting the form: " + error.message, { toastId: TOAST_IDS.BILL_GENERATE });
       console.error("Error submitting form:", error);
     }
   };
@@ -299,11 +300,11 @@ const MetersBillGeneratePage = () => {
         } 
       });
 
-      toast.success("Meter data deleted successfully!");
+      toast.success("Meter data deleted successfully!", { toastId: TOAST_IDS.BILL_GENERATE });
       setTableData((prev) => prev.filter((item) => item.id !== row.id));
 
     } catch (error) {
-      toast.error("Error deleting meter data: " + error.message);
+      toast.error("Error deleting meter data: " + error.message, { toastId: TOAST_IDS.BILL_GENERATE });
       console.error("Error deleting meter data:", error);
     }
   };
@@ -427,7 +428,7 @@ const MetersBillGeneratePage = () => {
         showBillTemplate: true,
         billData: [...reportData, totalsRow]
       });
-      toast.success('Bill generated successfully');
+      toast.success('Bill generated successfully', { toastId: TOAST_IDS.BILL_GENERATE });
     } catch (error) {
       console.error('Error generating bill:', error);
       toast.error(error.response?.data?.error || 'Failed to generate bill');

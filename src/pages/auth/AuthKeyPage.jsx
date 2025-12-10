@@ -5,6 +5,7 @@ import { useSecureNavigation } from '../../hooks/useSecureNavigation';
 import useAuthKey from '../../features/auth/hooks/useAuthKey';
 import useAuth from '../../hooks/useAuth';
 import { toast } from 'react-toastify';
+import { TOAST_IDS } from '../../constants/toastIds';
 const AuthKeyPage = ({
   title = 'Gateway Authentication Required',
   redirectTo = '/dashboard',
@@ -33,7 +34,7 @@ const AuthKeyPage = ({
         // Use secure navigation to dashboard
         navigateToDashboard();
       } else {
-        toast.error('Invalid authentication key');
+        toast.error('Invalid authentication key', { toastId: TOAST_IDS.LOGIN_ERROR });
         console.log('AuthKeyPage - Key does not match');
         // Handle error in the useAuthKey hook
       }

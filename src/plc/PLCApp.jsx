@@ -15,6 +15,7 @@ import PlcLoadingOverlay from './components/PlcLoadingOverlay';
 import PlcConfigDialog from './components/PlcConfigDialog';
 import TimerSettingsDialog from './components/TimerSettingsDialog';
 import { toast } from 'react-toastify';
+import { TOAST_IDS } from '../constants/toastIds';
 
 function PLCApp() {
   const TOTAL_IO = 14;
@@ -224,7 +225,7 @@ function PLCApp() {
         const data = { nodeDataArray: diagramData.nodeDataArray || [], linkDataArray: diagramData.linkDataArray || [] };
         setDbSnapshot(data);
         setIsReadOnlyDiagram(true);
-        toast.success('PLC logic updated');
+        toast.success('PLC logic updated', { toastId: TOAST_IDS.PLC_SAVE });
       } else {
         const input = {
           input: {
@@ -242,11 +243,11 @@ function PLCApp() {
         const data = { nodeDataArray: diagramData.nodeDataArray || [], linkDataArray: diagramData.linkDataArray || [] };
         setDbSnapshot(data);
         setIsReadOnlyDiagram(true);
-        toast.success('PLC logic saved');
+        toast.success('PLC logic saved', { toastId: TOAST_IDS.PLC_SAVE });
       }
     } catch (e) {
       console.error('Error saving PLC logic:', e);
-      toast.error('Failed to save PLC logic');
+      toast.error('Failed to save PLC logic', { toastId: TOAST_IDS.PLC_SAVE });
     }
   }, [diagramData.nodeDataArray, diagramData.linkDataArray, relayLogicId]);
 

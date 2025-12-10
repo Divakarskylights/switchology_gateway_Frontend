@@ -3,7 +3,7 @@ import { Box, CircularProgress, Typography, Grid, Grow, Paper } from '@mui/mater
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { graphqlClient } from "../../services/client";
-import { INSERT_PROFILE_DATA, UPDATE_PROFILE, GET_PROFILE_DATA } from "../../services/query";
+import { INSERT_PROFILE_DATA, UPDATE_PROFILE_BY_USERID, GET_PROFILE_DATA } from "../../services/query";
 import { ProfileForm } from "../../features/profile/components/ProfileForm";
 import { configInit } from '../../components/layout/globalvariable';
 import { clearToken } from '../../utils/secureUrls';
@@ -63,7 +63,6 @@ function ProfilePage() {
                         email: profile.email || '',
                         organization: profile.orgname || '',
                         userPresent: true,
-                        nodeId: profile.nodeId,
                         userid: profile.userid,
                         dbAdminPass: profile.adminPassword || '',
                         dbViewerPass: profile.viewerPassword || '',
@@ -89,10 +88,10 @@ function ProfilePage() {
     const handleSubmit = async (formData) => {
         try {
             if (profileData.userPresent) {
-                // Update existing profile
+                // Update existing profile using userid
                 const updateVariables = {
                     input: {
-                        nodeId: profileData.nodeId,
+                        userid: profileData.userid,
                         profilePatch: {
                             userid: profileData.userid,
                             name: formData.name,
@@ -106,7 +105,7 @@ function ProfilePage() {
                     }
                 };
 
-                await graphqlClient.request(UPDATE_PROFILE, updateVariables);
+                await graphqlClient.request(UPDATE_PROFILE_BY_USERID, updateVariables);
                 toast.success("Profile updated successfully");
             } else {
                 // Create new profile

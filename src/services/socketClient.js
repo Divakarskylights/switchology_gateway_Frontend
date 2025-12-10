@@ -1,5 +1,6 @@
 import { io } from 'socket.io-client';
 import { toast } from 'react-toastify';
+import { TOAST_IDS } from '../constants/toastIds';
 import { configInit } from '../component/global/globalvariable';
 
 class SocketClient {
@@ -71,7 +72,7 @@ class SocketClient {
         });
 
         this.socket.on('relay-error', (err) => {
-            toast.error(`Relay error: ${err.error || 'Unknown socket error'}`);
+            toast.error(`Relay error: ${err.error || 'Unknown socket error'}`, { toastId: TOAST_IDS.RELAY_TOGGLE });
             this.notifyListeners('relay-error', err);
         });
 
@@ -85,7 +86,7 @@ class SocketClient {
         });
 
         this.socket.on('power-factor-error', (err) => {
-            toast.error(`Power factor error: ${err.error || 'Unknown socket error'}`);
+            toast.error(`Power factor error: ${err.error || 'Unknown socket error'}`, { toastId: TOAST_IDS.GENERIC_ERROR });
             this.notifyListeners('power-factor-error', err);
         });
 
@@ -95,7 +96,7 @@ class SocketClient {
         });
 
         this.socket.on('minmax-current-error', (err) => {
-            toast.error(`Min/Max Current error: ${err.error || 'Unknown socket error'}`);
+            toast.error(`Min/Max Current error: ${err.error || 'Unknown socket error'}`, { toastId: TOAST_IDS.GENERIC_ERROR });
             this.notifyListeners('minmax-current-error', err);
         });
     }

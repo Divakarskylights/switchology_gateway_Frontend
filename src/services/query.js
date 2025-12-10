@@ -34,6 +34,26 @@ const INSERT_METER_DATA = gql`
   }
 `;
 
+// --------------- RELAY LOGS QUERIES ---------------
+
+const GET_RELAY_LOGS = gql`
+  query GetRelayLogs {
+    allRelayLogs(orderBy: CREATED_AT_DESC, first: 100) {
+      nodes {
+        id
+        relaysetupId
+        relayNumber
+        previousState
+        newState
+        source
+        details
+        createdAt
+      }
+    }
+  }
+`;
+
+
 
 
 const INSERT_AUTH = gql`
@@ -52,7 +72,6 @@ const GET_PROFILE_DATA = gql`
 query GetProfiles {
   allProfiles {
     nodes {
-      nodeId
       createTime
       email
       gatewayName
@@ -958,10 +977,67 @@ const UPDATE_RELAY_PLCLOGIC_BY_ID = gql`
     }
   }
 `;
+
+// --------------- RELAY SETUP QUERIES ---------------
+
+const GET_RELAY_SETUP = gql`
+  query GetRelaySetup {
+    allRelaysetups {
+      nodes {
+        id
+        relayNumber
+        mode
+        scheduleEnabled
+        scheduleType
+        scheduleTimeOn
+        scheduleTimeOff
+        scheduleDays
+        scheduleDate
+      }
+    }
+  }
+`;
+
+const CREATE_RELAY_SETUP = gql`
+  mutation CreateRelaysetup($input: CreateRelaysetupInput!) {
+    createRelaysetup(input: $input) {
+      relaysetup {
+        id
+        relayNumber
+        mode
+        scheduleEnabled
+        scheduleType
+        scheduleTimeOn
+        scheduleTimeOff
+        scheduleDays
+        scheduleDate
+      }
+    }
+  }
+`;
+
+const UPDATE_RELAY_SETUP = gql`
+  mutation UpdateRelaysetupById($input: UpdateRelaysetupByIdInput!) {
+    updateRelaysetupById(input: $input) {
+      relaysetup {
+        id
+        relayNumber
+        mode
+        scheduleEnabled
+        scheduleType
+        scheduleTimeOn
+        scheduleTimeOff
+        scheduleDays
+        scheduleDate
+      }
+    }
+  }
+`;
 export {
   INSERT_PROFILE_DATA, GET_PROFILE_DATA, INSERT_METER_INFO, UPDATE_METER_INFO, DELETE_METER_INFO, GET_METER_INFO, UPDATE_METER_INTERVAL,
   UPDATE_PROFILE, UPDATE_PROFILE_BY_USERID, UPDATE_PASSWORD, UPDATE_FORGOT_PASSWORD,
   GET_RELAY_STATUS,
+  GET_RELAY_LOGS,
   UPDATE_JSON_DATA,
   GET_ALL_GENERATED_JSON_DATA,
   RESET_PASSWORD, INSERT_AUTH, GET_AUTH, INSERT_METER_DATA, GET_REPORTDATA,
@@ -997,5 +1073,9 @@ export {
   // Relay PLC Logic
   GET_RELAY_PLCLOGIC_LATEST,
   INSERT_RELAY_PLCLOGIC,
-  UPDATE_RELAY_PLCLOGIC_BY_ID
+  UPDATE_RELAY_PLCLOGIC_BY_ID,
+  // Relay Setup
+  GET_RELAY_SETUP,
+  CREATE_RELAY_SETUP,
+  UPDATE_RELAY_SETUP
 }

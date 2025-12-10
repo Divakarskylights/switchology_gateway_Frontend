@@ -15,6 +15,7 @@ import AnalyticsOutlinedIcon from '@mui/icons-material/AnalyticsOutlined';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined';
 import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
+import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
 import useThemeChange from '../../redux/store/useThemeStore';
 import useRole from '../../redux/store/useRole';
 import { useSecureNavigation } from '../../hooks/useSecureNavigation';
@@ -31,6 +32,7 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
 const navItems = [
   { name: 'Home', route: '/dashboard', Icon: HomeOutlinedIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'Setup', route: '/admin/setup', Icon: EngineeringOutlinedIcon, roles: ['ADMIN'] },
+  { name: 'Relay Setup', route: '/admin/relay-setup', Icon: SettingsInputComponentIcon, roles: ['ADMIN'] },
   { name: 'Energy Monitoring', route: '/analytics/ems', Icon: AnalyticsOutlinedIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'KPI', route: '/analytics/kpi', Icon: AssessmentIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'Meter Billing', route: '/admin/meter-config', Icon: SpeedOutlinedIcon, roles: ['ADMIN'] },

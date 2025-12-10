@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { TOAST_IDS } from '../../constants/toastIds';
 import { useDateRange } from '../../redux/store/useDateRange';
 import { configInit } from '../../components/layout/globalvariable';
 import { MeterReportForm } from '../../features/reports/components/MeterReportForm';
@@ -33,7 +34,7 @@ const ReportPage = () => {
       setMeterData(data);
       setLoading(false);
     } catch (error) {
-      toast.error('Failed to fetch meter data');
+      toast.error('Failed to fetch meter data', { toastId: TOAST_IDS.REPORT_GENERATE });
       setLoading(false);
     }
   };
@@ -50,7 +51,7 @@ const ReportPage = () => {
       );
     } catch (error) {
       setTableData([]);
-      toast.error('Failed to fetch generated files');
+      toast.error('Failed to fetch generated files', { toastId: TOAST_IDS.REPORT_GENERATE });
     }
   };
 
@@ -83,7 +84,7 @@ const ReportPage = () => {
       // After successful generation, refresh the table
       await fetchGeneratedFiles();
     } catch (error) {
-      toast.error(error.response?.data || 'Failed to process request');
+      toast.error(error.response?.data || 'Failed to process request', { toastId: TOAST_IDS.REPORT_GENERATE });
     } finally {
       setBackdrop(false);
     }
@@ -179,7 +180,7 @@ const ReportPage = () => {
                               link.click();
                               document.body.removeChild(link);
 
-                              toast.success('Download started');
+                              toast.success('Download started', { toastId: TOAST_IDS.REPORT_GENERATE });
                             }}
                           >
                             Download
