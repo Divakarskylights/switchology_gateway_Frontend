@@ -162,11 +162,11 @@ const AppRoutes = () => {
         </ProtectedRoute>
       } />
 
-      <Route path="/admin/relay-setup" element={
+      {/* <Route path="/admin/relay-setup" element={
         <ProtectedRoute allowedRoles={['ADMIN']}>
           <DashboardLayout component={RelaySetupPage} />
         </ProtectedRoute>
-      } />
+      } /> */}
 
       {/* Fallback route */}
       <Route path="*" element={

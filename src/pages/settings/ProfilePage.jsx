@@ -42,7 +42,7 @@ function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [showContent, setShowContent] = useState(false); // For Grow animation
 
-    console.log("profileData=>", profileData, configInit.gatewayName,);
+    // console.log("profileData=>", profileData, configInit.gatewayName,);
 
     useEffect(() => {
         console.log("ProfilePage - useEffect started");
@@ -51,7 +51,7 @@ function ProfilePage() {
                 console.log("ProfilePage - fetching profile data...");
                 const data = await graphqlClient.request(GET_PROFILE_DATA);
                 const profile = data?.allProfiles?.nodes?.[0];
-                console.log("profile=>", profile);
+                // console.log("profile=>", profile);
 
                 if (profile) {
                     setProfileData(prev => ({

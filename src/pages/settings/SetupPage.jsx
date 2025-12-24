@@ -115,7 +115,7 @@ const SetupPage = () => {
     try {
       const data = await graphqlClient.request(GET_METER_INFO);
       const meters = data?.allMeterConfigrations?.nodes || [];
-      console.log("meters=>", meters, meterOptions);
+      // console.log("meters=>", meters, meterOptions);
       const validMeters = meters.map(m => {
         let parsedCon = m.con;
         if (typeof parsedCon === 'string') {
@@ -136,7 +136,7 @@ const SetupPage = () => {
           con: parsedCon,
         };
       });
-      console.log("validMeters=>", validMeters);
+      // console.log("validMeters=>", validMeters);
 
       setMeterConfigurations(validMeters);
       if (validMeters.length > 0) {
@@ -424,7 +424,7 @@ const SetupPage = () => {
     const meterLabelToDelete = editingMeterConfig.label;
     const meterIdForRelatedData = `${configInit.gatewayName}_id${editingMeterConfig.meter_no}`;
     console.log("meterIdForRelatedData=>", meterIdForRelatedData);
-    console.log("meterNoToDelete=>", typeof (meterNoToDelete));
+    console.log("meterNoToDelete=>", typeof (meterNoToDelete), meterNoToDelete);
 
     try {
       const data = await graphqlClient.request(DELETE_METER_INFO, {

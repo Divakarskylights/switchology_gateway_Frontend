@@ -891,15 +891,7 @@ console.log("✅ Final KPI Data:", finalKpiData);
         <TableContainer>
           <Table size="small">
             <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Sl. No</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', width: '30%' }}>Parameter</TableCell> {/* Max width */}
-                <TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Value</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Unit</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Created Date (From - To)</TableCell>
-                <TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Updated Date</TableCell>
-                <TableCell /> {/* MoreVert column */}
-              </TableRow>
+              <TableRow><TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Sl. No</TableCell><TableCell sx={{ fontWeight: 'bold', width: '30%' }}>Parameter</TableCell><TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Value</TableCell><TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Unit</TableCell><TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Created Date (From - To)</TableCell><TableCell sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>Updated Date</TableCell><TableCell /></TableRow>
             </TableHead>
             <TableBody>
               {mergedKpiData.length > 0 ? (
@@ -911,7 +903,7 @@ console.log("✅ Final KPI Data:", finalKpiData);
                     <TableCell sx={{ py: 0.1, whiteSpace: 'nowrap', fontSize: '10px' }}>{row.units || '-'}</TableCell>
                     <TableCell sx={{ py: 0.1, whiteSpace: 'nowrap', fontSize: '10px' }}>{row.createdDateDisplay}</TableCell>
                     <TableCell sx={{ py: 0.1, whiteSpace: 'nowrap', fontSize: '10px' }}>
-                      {row.updated_date ? new Date(row.updated_date).toLocaleString() : '-'}
+                      {row.updatedDate ? new Date(row.updatedDate).toLocaleString() : '-'}
                     </TableCell>
                     <TableCell align="right" sx={{ py: 0.5 }} >
                       <IconButton
@@ -969,7 +961,7 @@ console.log("✅ Final KPI Data:", finalKpiData);
                 </TableRow>
                 <TableRow>
                   <TableCell sx={{ fontWeight: 'bold', width: '30%' }}>Updated Date</TableCell>
-                  <TableCell>{viewRowData.updated_date ? new Date(viewRowData.updated_date).toLocaleString() : '-'}</TableCell>
+                  <TableCell>{viewRowData.updatedDate ? new Date(viewRowData.updatedDate).toLocaleString() : '-'}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

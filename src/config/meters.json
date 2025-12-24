@@ -1401,5 +1401,23 @@
             "Even",
             "None"
         ]
-    }
+    },
+    {
+  "device_make": "MULTISPAN",
+  "device_model": "AVH-14-M1",
+  "device_type": "Energy Meter",
+  "device_name": "Multi Function Meter",
+  "device_description": "MFM, RS-485 MODBUS, Class 0.5, 3Ph-4W/3Ph-3W/1Ph-2W, CT up to 6000A, PT up to 520kV",
+  "baud_rate": [
+    "4800",
+    "9600",
+    "19200",
+    "38400"
+  ],
+  "parity": [
+    "None",
+    "Even",
+    "Odd"
+  ]
+}
 ]

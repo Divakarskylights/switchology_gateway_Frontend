@@ -198,6 +198,23 @@ const RelayConfiguration = ({
                               onChange={(e) => handleScheduleChange(num, 'timeOn', e.target.value)}
                               fullWidth
                               sx={{ mt: 0.5 }}
+                              InputProps={{
+                                endAdornment: schedule.timeOn && (
+                                  <Box
+                                    component="button"
+                                    onClick={() => handleScheduleChange(num, 'timeOn', '')}
+                                    sx={{
+                                      background: 'none',
+                                      border: 'none',
+                                      cursor: 'pointer',
+                                      p: 0.5,
+                                      '&:hover': { backgroundColor: 'action.hover' }
+                                    }}
+                                  >
+                                    ×
+                                  </Box>
+                                )
+                              }}
                             />
                           </Box>
 
@@ -213,6 +230,23 @@ const RelayConfiguration = ({
                               onChange={(e) => handleScheduleChange(num, 'timeOff', e.target.value)}
                               fullWidth
                               sx={{ mt: 0.5 }}
+                              InputProps={{
+                                endAdornment: schedule.timeOff && (
+                                  <Box
+                                    component="button"
+                                    onClick={() => handleScheduleChange(num, 'timeOff', '')}
+                                    sx={{
+                                      background: 'none',
+                                      border: 'none',
+                                      cursor: 'pointer',
+                                      p: 0.5,
+                                      '&:hover': { backgroundColor: 'action.hover' }
+                                    }}
+                                  >
+                                    ×
+                                  </Box>
+                                )
+                              }}
                             />
                           </Box>
                         </Box>

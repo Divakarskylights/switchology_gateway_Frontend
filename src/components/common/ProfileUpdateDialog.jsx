@@ -84,7 +84,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
           enabled: smtpData.enabled || false,
           host: smtpData.host || 'smtp.gmail.com:587',
           user: smtpData.user || '',
-          password: smtpData.password || '',
+          password: '',
           fromAddress: smtpData.fromAddress || '',
           fromName: smtpData.fromName || 'GATEWAY'
         });
@@ -436,6 +436,9 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             onChange={(e) => setSmtpConfig(prev => ({ ...prev, user: e.target.value }))}
                             disabled={!smtpConfig.enabled}
                             required={smtpConfig.enabled}
+                            pattern=".+@.+\..+"
+                            title="Email address"
+                            type="email"
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -459,6 +462,9 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             onChange={(e) => setSmtpConfig(prev => ({ ...prev, fromAddress: e.target.value }))}
                             disabled={!smtpConfig.enabled}
                             required={smtpConfig.enabled}
+                            pattern=".+@.+\..+"
+                            title="Email address"
+                            type="email"
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>

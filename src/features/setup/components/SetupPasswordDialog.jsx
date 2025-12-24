@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogActions, Button, TextField, Typography, Grow, InputAdornment, IconButton } from '@mui/material';
+import { Dialog, DialogContent, DialogActions, Button, TextField, Typography, Grow, InputAdornment, IconButton, Box } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -31,6 +31,13 @@ const SetupPasswordDialog = ({ open, onClose, onConfirm, dialogType, actionDescr
 
   const handleConfirm = () => {
     onConfirm(password);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (password) {
+      handleConfirm();
+    }
   };
 
   const handleClickShowPassword = () => {
@@ -77,36 +84,45 @@ const SetupPasswordDialog = ({ open, onClose, onConfirm, dialogType, actionDescr
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {description}
         </Typography>
-        <TextField
-          inputRef={inputRef}
-          type={showPassword ? 'text' : 'password'}
-          label="Admin Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-          size="small"
-          variant="outlined"
-          autoComplete="current-password"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <LockOutlinedIcon color="action" />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-        />
+        <Box component="form" onSubmit={handleSubmit} noValidate>
+          <TextField
+            type="text"
+            value="admin"
+            autoComplete="username"
+            sx={{ display: 'none' }}
+            aria-hidden="true"
+          />
+          <TextField
+            inputRef={inputRef}
+            type={showPassword ? 'text' : 'password'}
+            label="Admin Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            size="small"
+            variant="outlined"
+            autoComplete="current-password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <LockOutlinedIcon color="action" />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+          />
+        </Box>
       </DialogContent>
       <DialogActions sx={{ p: '16px 24px', justifyContent: 'center', gap: 2 }}>
         <Button variant="outlined" onClick={handleClose} size="small">

@@ -80,7 +80,7 @@ const DashboardPage = () => {
               </Typography>
 
               <Typography variant="body1">
-                <strong>Manufacture Date:</strong> {"1st Aug 2024"}
+                <strong>Manufacture Date:</strong> {"1st Nov 2025"}
               </Typography>
             </Grid>
           </Grid>

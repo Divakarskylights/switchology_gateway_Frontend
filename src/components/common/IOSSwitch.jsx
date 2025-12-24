@@ -1,10 +1,11 @@
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
+import React from 'react';
 
 // Compact iOS style switch
-export const IOSSwitch = styled((props) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
+export const IOSSwitch = styled(React.forwardRef((props, ref) => (
+  <Switch ref={ref} focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+)))(({ theme }) => ({
   width: 32,   // smaller width
   height: 18,  // smaller height
   padding: 0,
