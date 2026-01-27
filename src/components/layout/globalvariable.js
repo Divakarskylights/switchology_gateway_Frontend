@@ -3,9 +3,12 @@ import axios from "axios";
 const effectiveProtocol = 'http:';
 
 const isProd = window.location.hostname.endsWith('switchology.in');
-const appBaseUrl = isProd
-  ? 'https://' + window.location.hostname   // Cloudflare Tunnel → HTTPS
-  : window.location.protocol + '//' + window.location.hostname; // localhost/dev
+// const appBaseUrl = isProd
+//   ? 'https://' + window.location.hostname   // Cloudflare Tunnel → HTTPS
+//   : window.location.protocol + '//' + window.location.hostname; // localhost/dev
+
+// TEMP DEV: point directly to gateway backend
+const appBaseUrl = 'http://192.168.68.129:5556';
 
 // const appBaseUrl = 'http://192.168.1.100'
 console.log(appBaseUrl, isProd);
@@ -20,6 +23,7 @@ export const configInit = {
   orgName: "",
   buildingName: "",
   address: "",
+  single_scada_diagram_name: "default_scada_diagram",
   formatDates: (dateStr) => {
     let date = new Date(dateStr);
     return date

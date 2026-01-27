@@ -19,18 +19,8 @@ export function useAppInitialization() {
   useEffect(() => {
     const init = async () => {
       // Load system info from localStorage
-      const cachedSystemInfo = localStorage.getItem("system-info");
-      if (cachedSystemInfo) {
-        try {
-          const parsed = JSON.parse(cachedSystemInfo);
-          const hostname = parsed?.hostname || "will-be-updated";
-          configInit.gatewayName = hostname;
-          setGateWayId(hostname);
-          setSystemInfo(parsed); // Set the cached system info
-        } catch (e) {
-          console.warn("Invalid system-info in localStorage");
-        }
-      }
+  
+    
 
       // Load user role from localStorage
       const currentUserId = localStorage.getItem("userid");
@@ -42,8 +32,8 @@ export function useAppInitialization() {
 
       // Fetch profile data
       try {
-        const profileResponse = await graphqlClient.request(GET_PROFILE_DATA);
-        const profiles = profileResponse?.allProfiles?.nodes || [];
+        const response = await fetch(`${configInit.appBaseUrl}/api/profiles`);
+        const profiles = await response.json();
         
         // Check if any profile exists
         if (profiles.length > 0) {
@@ -69,7 +59,7 @@ export function useAppInitialization() {
 
       // Fetch fast system info
       try {
-        const res = await fetch(`${configInit.appBaseUrl}/v2/api/system-info`, {
+        const res = await fetch(`${configInit.appBaseUrl}/api/system-info`, {
           signal: AbortSignal.timeout(5000),
         });
         const fastData = await res.json();
@@ -77,12 +67,14 @@ export function useAppInitialization() {
         configInit.gatewayName = hostname;
         setGateWayId(hostname);
         setSystemInfo(fastData); // Set the fresh system info
-        localStorage.setItem(
-          "system-info",
-          JSON.stringify({ ...fastData })
-        );
+    
       } catch (err) {
-        console.error("Fast system info error:", err);
+        const name = err?.name || '';
+        if (name === 'AbortError' || name === 'TimeoutError') {
+          console.warn('Fast system info request timed out');
+        } else {
+          console.error('Fast system info error:', err);
+        }
       }
     };
 

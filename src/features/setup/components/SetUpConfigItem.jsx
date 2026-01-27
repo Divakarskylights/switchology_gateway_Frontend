@@ -1,18 +1,40 @@
 
 import React from 'react';
-import { TextField, Typography, MenuItem } from '@mui/material';
+import { Box, TextField, Typography, MenuItem, ListSubheader } from '@mui/material';
 
-const ConfigItem = ({ label, value, onChange, select, options = [], disabled, name, required, type = 'text' }) => {
+const ConfigItem = ({
+  label,
+  labelAction,
+  value,
+  onChange,
+  select,
+  options = [],
+  disabled,
+  name,
+  required,
+  type = 'text',
+}) => {
+  const normalizedOptions = Array.isArray(options) ? options : [];
   const handleInputChange = (event) => {
     const newValue = event.target.value;
     if (onChange) onChange(name, newValue);
   };
 
-  const safeValue = select && options.length && !options.some(opt => opt.value === value) ? '' : (value === null || value === undefined ? '' : value);
+  const safeValue =
+    select && normalizedOptions.length && !normalizedOptions.some((opt) => opt.value === value)
+      ? ''
+      : value === null || value === undefined
+        ? ''
+        : value;
 
   return (
     <>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>{label}</Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {label}
+        </Typography>
+        {labelAction || null}
+      </Box>
       <TextField
         select={select}
         fullWidth
@@ -24,11 +46,20 @@ const ConfigItem = ({ label, value, onChange, select, options = [], disabled, na
         type={type}
         inputProps={type === 'number' ? { min: 1, step: 1 } : {}}
       >
-        {select && options.map(option => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
+        {select && normalizedOptions.map((option, index) => {
+          if (option.type === 'subheader') {
+            return (
+              <ListSubheader key={`subheader-${index}`} sx={{ fontWeight: 700, fontSize: 12 }}>
+                {option.label}
+              </ListSubheader>
+            );
+          }
+          return (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          );
+        })}
       </TextField>
     </>
   );

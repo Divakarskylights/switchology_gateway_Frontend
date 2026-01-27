@@ -4,7 +4,7 @@ import { Grow, Chip } from '@mui/material';
 const MeterChip = ({ meter, isSelected, isLive, onClick, index }) => (
   <Grow in={true} timeout={150 * (index + 1)}>
     <Chip
-      label={`${meter.label} (ID: ${meter.meter_no})`}
+      label={`${meter.meter_name} (ID: ${meter.meter_no})`}
       onClick={onClick}
       sx={{
         cursor: 'pointer', fontWeight: 600,

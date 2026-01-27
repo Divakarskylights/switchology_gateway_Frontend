@@ -1,23 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { Box, Button, Dialog, DialogActions, DialogContent, CircularProgress, DialogTitle, TextField, Typography, Paper, Grid, LinearProgress, Switch, FormControlLabel, Divider, Alert } from '@mui/material';
-import { graphqlClient } from '../../services/client';
-import { UPDATE_PROFILE, GET_PROFILE_DATA } from '../../services/query';
-import useRole from '../../redux/store/useRole';
-import { IOSSwitch } from './IOSSwitch';
-import { configInit } from '../layout/globalvariable';
-import { TOAST_IDS } from '../../constants/toastIds';
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  CircularProgress,
+  DialogTitle,
+  TextField,
+  Typography,
+  Paper,
+  Grid,
+  LinearProgress,
+  Switch,
+  FormControlLabel,
+  Divider,
+  Alert,
+} from "@mui/material";
+import { graphqlClient } from "../../services/client";
+import { UPDATE_PROFILE, GET_PROFILE_DATA } from "../../services/query";
+import useRole from "../../redux/store/useRole";
+import { IOSSwitch } from "./IOSSwitch";
+import { configInit } from "../layout/globalvariable";
+import { TOAST_IDS } from "../../constants/toastIds";
 
 const ProfileUpdateDialog = ({ open, onClose }) => {
   const { role } = useRole();
   const [profileData, setProfileData] = useState({
-    name: '',
-    buildingName: '',
-    address: '',
-    email: '',
-    organization: '',
-    newpassword: '',
-    conformpassword: '',
+    name: "",
+    buildingName: "",
+    address: "",
+    email: "",
+    organization: "",
+    newpassword: "",
+    conformpassword: "",
+    userId: "",
   });
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -26,14 +44,14 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
   const [error, setError] = useState(null);
   const [smtpConfig, setSmtpConfig] = useState({
     enabled: false,
-    host: 'smtp.gmail.com:587',
-    user: '',
-    password: '',
-    fromAddress: '',
-    fromName: 'GATEWAY'
+    host: "smtp.gmail.com:587",
+    user: "",
+    password: "",
+    fromAddress: "",
+    fromName: "GATEWAY",
   });
   const [smtpSaving, setSmtpSaving] = useState(false);
-  const [smtpStatus, setSmtpStatus] = useState('');
+  const [smtpStatus, setSmtpStatus] = useState("");
 
   // Fetch profile data when dialog opens
   useEffect(() => {
@@ -47,28 +65,43 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await graphqlClient.request(GET_PROFILE_DATA);
-      const currentUserId = localStorage.getItem("userid");
-      const profile = data?.allProfiles?.nodes?.find(
-        (p) => p.userid === currentUserId
-      );
+      // const data = await graphqlClient.request(GET_PROFILE_DATA);
 
-      if (profile) {
-        setProfileData({
-          name: profile.name || '',
-          buildingName: profile.buildingName || '',
-          address: profile.address || '',
-          email: profile.email || '',
-          organization: profile.orgname || '',
-          newpassword: '',
-          conformpassword: '',
-        });
-      } else {
-        setError('Profile not found');
+      // const currentUserId = localStorage.getItem("userid");
+
+      const response = await fetch(`${configInit.appBaseUrl}/api/profiles`);
+
+      console.log("profile_icon_response:", response);
+
+      if (response.ok) {
+        const data = await response.json();
+        // console.log("ProfileData:", data);
+
+        // const profile = data?.allProfiles?.nodes?.find(
+        //   (p) => p.userid === currentUserId
+        // );
+
+        // console.log("Profile:", profile);
+        if (data) {
+          console.log("Profile_api_data:", data);
+          // const profileData = data
+          setProfileData({
+            name: data.name || "",
+            buildingName: data.building_name || "",
+            address: data.address || "",
+            email: data.email || "",
+            organization: data.orgname || "",
+            userId: data.userid || "",
+            newpassword: "",
+            conformpassword: "",
+          });
+        } else {
+          setError("Profile not found");
+        }
       }
     } catch (error) {
-      console.error('Error fetching profile data:', error);
-      setError('Failed to fetch profile data');
+      console.error("Error fetching profile data:", error);
+      setError("Failed to fetch profile data");
     } finally {
       setLoading(false);
     }
@@ -77,20 +110,22 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
   // Fetch SMTP settings from backend API
   const fetchSmtpConfig = async () => {
     try {
-      const response = await fetch(`${configInit.appBaseUrl}/v2/api/get-smtp-config`);
+      const response = await fetch(
+        `${configInit.appBaseUrl}/api/get-smtp-config`
+      );
       if (response.ok) {
         const smtpData = await response.json();
         setSmtpConfig({
           enabled: smtpData.enabled || false,
-          host: smtpData.host || 'smtp.gmail.com:587',
-          user: smtpData.user || '',
-          password: '',
-          fromAddress: smtpData.fromAddress || '',
-          fromName: smtpData.fromName || 'GATEWAY'
+          host: smtpData.host || "smtp.gmail.com:587",
+          user: smtpData.user || "",
+          password: "",
+          fromAddress: smtpData.fromAddress || "",
+          fromName: smtpData.fromName || "GATEWAY",
         });
       }
     } catch (error) {
-      console.error('Error fetching SMTP config:', error);
+      console.error("Error fetching SMTP config:", error);
       // Keep default values if API fails
     }
   };
@@ -100,51 +135,68 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
     try {
       // If SMTP is enabled, validate all required fields
       if (smtpConfig.enabled) {
-        if (!smtpConfig.host || !smtpConfig.user || !smtpConfig.password || !smtpConfig.fromAddress) {
-          toast.error('Please fill all required SMTP fields: Host, User, Password, and From Address', { toastId: TOAST_IDS.SMTP_ERROR });
+        if (
+          !smtpConfig.host ||
+          !smtpConfig.user ||
+          !smtpConfig.password ||
+          !smtpConfig.fromAddress
+        ) {
+          toast.error(
+            "Please fill all required SMTP fields: Host, User, Password, and From Address",
+            { toastId: TOAST_IDS.SMTP_ERROR }
+          );
           return;
         }
       }
 
       setSmtpSaving(true);
-      setSmtpStatus('Applying mail settings and restarting dashboard...');
+      setSmtpStatus("Applying mail settings and restarting dashboard...");
 
       const controller = new AbortController();
       timeoutId = setTimeout(() => {
         controller.abort();
       }, 60000); // 60s timeout
 
-      const response = await fetch(`${configInit.appBaseUrl}/v2/api/dashboard-smtp`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          enabled: smtpConfig.enabled,
-          host: smtpConfig.host,
-          user: smtpConfig.user,
-          password: smtpConfig.password,
-          fromAddress: smtpConfig.fromAddress,
-          fromName: smtpConfig.fromName
-        }),
-        signal: controller.signal
-      });
+      const response = await fetch(
+        `${configInit.appBaseUrl}/api/dashboard-save-smtp-config`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            enabled: smtpConfig.enabled,
+            host: smtpConfig.host,
+            user: smtpConfig.user,
+            password: smtpConfig.password,
+            fromAddress: smtpConfig.fromAddress,
+            fromName: smtpConfig.fromName,
+          }),
+          signal: controller.signal,
+        }
+      );
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        throw new Error(err.error || 'Failed to update Email SMTP');
+        throw new Error(err.error || "Failed to update Email SMTP");
       }
 
-      toast.success('Email SMTP updated and dashboard restart initiated', { toastId: TOAST_IDS.SMTP_UPDATE });
-      setSmtpStatus('Email SMTP updated and dashboard restarted successfully.');
+      toast.success("Email SMTP updated and dashboard restart initiated", {
+        toastId: TOAST_IDS.SMTP_UPDATE,
+      });
+      setSmtpStatus("Email SMTP updated and dashboard restarted successfully.");
     } catch (error) {
-      console.error('Error updating Email SMTP:', error);
-      if (error.name === 'AbortError') {
-        setSmtpStatus('Timed out waiting for dashboard restart.');
-        toast.error('Timed out waiting for dashboard restart', { toastId: TOAST_IDS.SMTP_ERROR });
+      console.error("Error updating Email SMTP:", error);
+      if (error.name === "AbortError") {
+        setSmtpStatus("Timed out waiting for dashboard restart.");
+        toast.error("Timed out waiting for dashboard restart", {
+          toastId: TOAST_IDS.SMTP_ERROR,
+        });
       } else {
-        setSmtpStatus(error.message || 'Failed to update Email SMTP');
-        toast.error(error.message || 'Failed to update Email SMTP', { toastId: TOAST_IDS.SMTP_ERROR });
+        setSmtpStatus(error.message || "Failed to update Email SMTP");
+        toast.error(error.message || "Failed to update Email SMTP", {
+          toastId: TOAST_IDS.SMTP_ERROR,
+        });
       }
     } finally {
       if (timeoutId) {
@@ -154,55 +206,112 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
     }
   };
 
+  const validateProfileForm = () => {
+    const errors = [];
+
+    // Required profile fields
+    if (!profileData.name.trim()) errors.push("Name");
+    if (!profileData.buildingName.trim()) errors.push("Building name");
+    if (!profileData.address.trim()) errors.push("Address");
+    if (!profileData.email.trim()) errors.push("Email");
+    if (!profileData.organization.trim()) errors.push("Organization");
+
+    // Admin password validation
+    if (resetAdmin) {
+      if (!profileData.newpassword.trim()) {
+        errors.push("New Admin Password");
+      } else if (profileData.newpassword.length < 7) {
+        errors.push("Admin password must be at least 7 characters");
+      }
+    }
+
+    // Viewer password validation
+    if (resetViewer) {
+      if (!profileData.conformpassword.trim()) {
+        errors.push("New Viewer Password");
+      } else if (profileData.conformpassword.length < 7) {
+        errors.push("Viewer password must be at least 7 characters");
+      }
+    }
+
+    return errors;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const errors = validateProfileForm();
+
+    if (errors.length > 0) {
+      console.log("profile_errors:", errors);
+      const message =
+        errors.length === 1
+          ? `${errors[0]} is required.`
+          : `${errors.join(", ")} are required.`;
+      setError(message);
+      toast.error(message);
+      return; // ⛔ stop submit
+    }
+
     setSaving(true);
     setError(null);
 
     try {
-      // Get current profile data to get nodeId and userid
-      const data = await graphqlClient.request(GET_PROFILE_DATA);
-      const currentUserId = localStorage.getItem("userid");
-      const currentProfile = data?.allProfiles?.nodes?.find(
-        (p) => p.userid === currentUserId
-      );
+      const userid = profileData.userId;
 
-      if (!currentProfile) {
-        throw new Error('Profile not found');
+      if (!userid) {
+        throw new Error("User ID not found");
       }
 
-      const updateVariables = {
-        input: {
-          nodeId: currentProfile.nodeId,
-          profilePatch: {
-            userid: currentProfile.userid,
-            name: profileData.name,
-            buildingName: profileData.buildingName,
-            address: profileData.address,
-            email: profileData.email,
-            orgname: profileData.organization,
-            // Only update passwords if checkboxes are checked
-            ...(resetAdmin && profileData.newpassword && { adminPassword: profileData.newpassword }),
-            ...(resetViewer && profileData.conformpassword && { viewerPassword: profileData.conformpassword }),
-          }
-        }
+      // Build payload (ONLY fields backend expects)
+      const payload = {
+        name: profileData.name,
+        building_name: profileData.buildingName,
+        address: profileData.address,
+        email: profileData.email,
+        orgname: profileData.organization,
       };
 
-      await graphqlClient.request(UPDATE_PROFILE, updateVariables);
+      // Conditionally add passwords
+      if (resetAdmin && profileData.newpassword) {
+        payload.adminPassword = profileData.newpassword;
+      }
+
+      if (resetViewer && profileData.conformpassword) {
+        payload.viewerPassword = profileData.conformpassword;
+      }
+
+      const response = await fetch(
+        `${configInit.appBaseUrl}/api/profiles/${userid}`,
+        {
+          method: "PUT", // or PATCH if backend supports it
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      console.log("put_profile_response:", response);
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile");
+      }
+
       toast.success("Profile updated successfully");
       onClose();
     } catch (error) {
-      console.error('Error updating profile:', error);
-      setError('Failed to update profile');
-      toast.error('Failed to update profile');
+      console.error("Error updating profile:", error);
+      setError("Failed to update profile");
+      toast.error("Failed to update profile");
     } finally {
       setSaving(false);
     }
@@ -210,13 +319,13 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
 
   const handleClose = () => {
     setProfileData({
-      name: '',
-      buildingName: '',
-      address: '',
-      email: '',
-      organization: '',
-      newpassword: '',
-      conformpassword: '',
+      name: "",
+      buildingName: "",
+      address: "",
+      email: "",
+      organization: "",
+      newpassword: "",
+      conformpassword: "",
     });
     setResetAdmin(false);
     setResetViewer(false);
@@ -231,7 +340,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
       maxWidth="md"
       fullWidth
       PaperProps={{
-        sx: { borderRadius: 2 }
+        sx: { borderRadius: 2 },
       }}
     >
       <DialogTitle>
@@ -241,7 +350,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
       </DialogTitle>
 
       <DialogContent>
-        {loading ? (
+        {/* {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
             <CircularProgress />
           </Box>
@@ -249,93 +358,109 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
-        ) : (
-          <Box component="form" onSubmit={handleSubmit} sx={{ pt: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Name"
-                  name="name"
-                  value={profileData.name}
-                  onChange={handleInputChange}
-                  required
-                  disabled={role !== 'ADMIN'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Building Name"
-                  name="buildingName"
-                  value={profileData.buildingName}
-                  onChange={handleInputChange}
-                  required
-                  disabled={role !== 'ADMIN'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Address"
-                  name="address"
-                  value={profileData.address}
-                  onChange={handleInputChange}
-                  required
-                  disabled={role !== 'ADMIN'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={profileData.email}
-                  onChange={handleInputChange}
-                  required
-                  disabled={role !== 'ADMIN'}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Organization"
-                  name="organization"
-                  value={profileData.organization}
-                  onChange={handleInputChange}
-                  required
-                  disabled={role !== 'ADMIN'}
-                />
-              </Grid>
+        ) : ( */}
+        <Box component="form" onSubmit={handleSubmit} sx={{ pt: 1 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Name"
+                name="name"
+                value={profileData.name}
+                onChange={handleInputChange}
+                required
+                // disabled={role !== "ADMIN"}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Building Name"
+                name="buildingName"
+                value={profileData.buildingName}
+                onChange={handleInputChange}
+                required
+                // disabled={role !== "ADMIN"}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Address"
+                name="address"
+                value={profileData.address}
+                onChange={handleInputChange}
+                required
+                // disabled={role !== "ADMIN"}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Email"
+                name="email"
+                type="email"
+                value={profileData.email}
+                onChange={handleInputChange}
+                required
+                // disabled={role !== "ADMIN"}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Organization"
+                name="organization"
+                value={profileData.organization}
+                onChange={handleInputChange}
+                required
+                // disabled={role !== "ADMIN"}
+              />
+            </Grid>
 
-              {role === 'ADMIN' && (
+            {
+              // role === "ADMIN"
+              true && (
                 <>
                   <Grid item xs={12}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1 }}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: 700, mb: 1 }}
+                    >
                       Password Management
                     </Typography>
-                    <Box sx={{
-                      p: 1.5,
-                      border: '1px solid #e0e0e0',
-                      borderRadius: 1,
-                      backgroundColor: '#f8f9fa'
-                    }}>
+                    <Box
+                      sx={{
+                        p: 1.5,
+                        border: "1px solid #e0e0e0",
+                        borderRadius: 1,
+                        backgroundColor: "#f8f9fa",
+                      }}
+                    >
                       <Grid container spacing={1}>
                         <Grid item xs={12}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              mb: 1,
+                            }}
+                          >
                             <input
                               type="checkbox"
                               checked={resetAdmin}
                               onChange={(e) => setResetAdmin(e.target.checked)}
                               style={{ marginRight: 8 }}
                             />
-                            <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                            <Typography
+                              variant="subtitle2"
+                              sx={{ fontWeight: 500 }}
+                            >
                               Reset Admin Password
                             </Typography>
                           </Box>
@@ -348,21 +473,38 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                               type="password"
                               value={profileData.newpassword}
                               onChange={handleInputChange}
-                              error={!!profileData.newpassword && profileData.newpassword.length < 4}
-                              helperText={profileData.newpassword && profileData.newpassword.length < 4 ? 'Minimum 4 characters' : ''}
+                              error={
+                                !!profileData.newpassword &&
+                                profileData.newpassword.length < 7
+                              }
+                              helperText={
+                                profileData.newpassword &&
+                                profileData.newpassword.length < 7
+                                  ? "Minimum 7 characters"
+                                  : ""
+                              }
                               sx={{ ml: 3 }}
                             />
                           )}
                         </Grid>
                         <Grid item xs={12}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              mb: 1,
+                            }}
+                          >
                             <input
                               type="checkbox"
                               checked={resetViewer}
                               onChange={(e) => setResetViewer(e.target.checked)}
                               style={{ marginRight: 8 }}
                             />
-                            <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                            <Typography
+                              variant="subtitle2"
+                              sx={{ fontWeight: 500 }}
+                            >
                               Reset Viewer Password
                             </Typography>
                           </Box>
@@ -375,8 +517,16 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                               type="password"
                               value={profileData.conformpassword}
                               onChange={handleInputChange}
-                              error={!!profileData.conformpassword && profileData.conformpassword.length < 4}
-                              helperText={profileData.conformpassword && profileData.conformpassword.length < 4 ? 'Minimum 4 characters' : ''}
+                              error={
+                                !!profileData.conformpassword &&
+                                profileData.conformpassword.length < 7
+                              }
+                              helperText={
+                                profileData.conformpassword &&
+                                profileData.conformpassword.length < 7
+                                  ? "Minimum 7 characters"
+                                  : ""
+                              }
                               sx={{ ml: 3 }}
                             />
                           )}
@@ -386,16 +536,21 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                   </Grid>
 
                   <Grid item xs={12}>
-                    <Typography variant="subtitle2" sx={{ fontWeight: 700, mt: 2 }}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ fontWeight: 700, mt: 2 }}
+                    >
                       Mail Settings for Alerts
                     </Typography>
-                    <Box sx={{
-                      p: 1.5,
-                      border: '1px solid #e0e0e0',
-                      borderRadius: 1,
-                      backgroundColor: '#f8f9fa',
-                      mt: 0.5
-                    }}>
+                    <Box
+                      sx={{
+                        p: 1.5,
+                        border: "1px solid #e0e0e0",
+                        borderRadius: 1,
+                        backgroundColor: "#f8f9fa",
+                        mt: 0.5,
+                      }}
+                    >
                       <Divider sx={{ mb: 1 }} />
                       <Grid container spacing={1}>
                         <Grid item xs={12}>
@@ -403,16 +558,27 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             control={
                               <IOSSwitch
                                 checked={!!smtpConfig.enabled}
-                                onChange={(e) => setSmtpConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                                onChange={(e) =>
+                                  setSmtpConfig((prev) => ({
+                                    ...prev,
+                                    enabled: e.target.checked,
+                                  }))
+                                }
                                 color="primary"
                               />
                             }
                             label={
-                              <Typography variant="subtitle2" sx={{ fontWeight: 500 }}>
+                              <Typography
+                                variant="subtitle2"
+                                sx={{ fontWeight: 500 }}
+                              >
                                 Enable Mail
                               </Typography>
                             }
-                            sx={{ margin: 0, '& .MuiFormControlLabel-label': { py: 0.5 } }}
+                            sx={{
+                              margin: 0,
+                              "& .MuiFormControlLabel-label": { py: 0.5 },
+                            }}
                           />
                         </Grid>
 
@@ -422,7 +588,12 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             size="small"
                             label="SMTP Host *"
                             value={smtpConfig.host}
-                            onChange={(e) => setSmtpConfig(prev => ({ ...prev, host: e.target.value }))}
+                            onChange={(e) =>
+                              setSmtpConfig((prev) => ({
+                                ...prev,
+                                host: e.target.value,
+                              }))
+                            }
                             disabled={!smtpConfig.enabled}
                             required={smtpConfig.enabled}
                           />
@@ -433,7 +604,12 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             size="small"
                             label="SMTP User (Email) *"
                             value={smtpConfig.user}
-                            onChange={(e) => setSmtpConfig(prev => ({ ...prev, user: e.target.value }))}
+                            onChange={(e) =>
+                              setSmtpConfig((prev) => ({
+                                ...prev,
+                                user: e.target.value,
+                              }))
+                            }
                             disabled={!smtpConfig.enabled}
                             required={smtpConfig.enabled}
                             pattern=".+@.+\..+"
@@ -448,7 +624,12 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             type="password"
                             label="SMTP Password / App Password *"
                             value={smtpConfig.password}
-                            onChange={(e) => setSmtpConfig(prev => ({ ...prev, password: e.target.value }))}
+                            onChange={(e) =>
+                              setSmtpConfig((prev) => ({
+                                ...prev,
+                                password: e.target.value,
+                              }))
+                            }
                             disabled={!smtpConfig.enabled}
                             required={smtpConfig.enabled}
                           />
@@ -459,7 +640,12 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             size="small"
                             label="From Address *"
                             value={smtpConfig.fromAddress}
-                            onChange={(e) => setSmtpConfig(prev => ({ ...prev, fromAddress: e.target.value }))}
+                            onChange={(e) =>
+                              setSmtpConfig((prev) => ({
+                                ...prev,
+                                fromAddress: e.target.value,
+                              }))
+                            }
                             disabled={!smtpConfig.enabled}
                             required={smtpConfig.enabled}
                             pattern=".+@.+\..+"
@@ -473,12 +659,23 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             size="small"
                             label="From Name"
                             value={smtpConfig.fromName}
-                            onChange={(e) => setSmtpConfig(prev => ({ ...prev, fromName: e.target.value }))}
+                            onChange={(e) =>
+                              setSmtpConfig((prev) => ({
+                                ...prev,
+                                fromName: e.target.value,
+                              }))
+                            }
                             disabled={!smtpConfig.enabled}
                           />
                         </Grid>
                         <Grid item xs={12}>
-                          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              mt: 1,
+                            }}
+                          >
                             <Button
                               variant="contained"
                               size="small"
@@ -494,7 +691,10 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                             <Box sx={{ mt: 1 }}>
                               <LinearProgress />
                               {smtpStatus && (
-                                <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
+                                <Typography
+                                  variant="caption"
+                                  sx={{ display: "block", mt: 0.5 }}
+                                >
                                   {smtpStatus}
                                 </Typography>
                               )}
@@ -505,18 +705,14 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                     </Box>
                   </Grid>
                 </>
-              )}
-            </Grid>
-          </Box>
-        )}
+              )
+            }
+          </Grid>
+        </Box>
       </DialogContent>
 
       <DialogActions sx={{ p: 2, gap: 1 }}>
-        <Button
-          onClick={handleClose}
-          disabled={saving}
-          variant="outlined"
-        >
+        <Button onClick={handleClose} disabled={saving} variant="outlined">
           Cancel
         </Button>
         <Button
@@ -525,7 +721,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
           disabled={saving || loading}
           sx={{ minWidth: 100 }}
         >
-          {saving ? <CircularProgress size={20} /> : 'Update Profile'}
+          {saving ? <CircularProgress size={20} /> : "Update Profile"}
         </Button>
       </DialogActions>
     </Dialog>

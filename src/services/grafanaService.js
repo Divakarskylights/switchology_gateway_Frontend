@@ -2,7 +2,6 @@ import { configInit } from '../component/global/globalvariable';
 
 export const setGrafanaRole = async (userRole, roleUpdateRef) => {
   if (roleUpdateRef.current) {
-   // console.log('Role already updated, skipping...');
     return;
   }
 
@@ -10,7 +9,7 @@ export const setGrafanaRole = async (userRole, roleUpdateRef) => {
 
   try {
     // Use the constructed grafanaBaseUrl
-    const response = await fetch(`${grafanaBaseUrl}/d/main/page/dashboards/api/users`, {
+    const response = await fetch(`${grafanaBaseUrl}/main/page/dashboards/api/users`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -45,12 +44,11 @@ export const setGrafanaRole = async (userRole, roleUpdateRef) => {
     if (adminUser) {
       try {
         // Use the constructed grafanaBaseUrl for update
-        const updateResponse = await fetch(`${grafanaBaseUrl}/d/main/page/dashboards/api/org/users/${adminUser.id}`, {
+        const updateResponse = await fetch(`${grafanaBaseUrl}/main/page/dashboards/api/org/users/${adminUser.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'X-Grafana-Org-Id': '1'
-            // Add authentication headers if needed
           },
           body: JSON.stringify({
             role: userRole === 'ADMIN' ? 'Editor' : 'Viewer' // Map your app roles to Grafana roles

@@ -5,7 +5,7 @@ import { TOAST_IDS } from '../../constants/toastIds';
 import MeterJsonEditorDialog, { insertMeterJsonData } from '../../features/setup/components/MeterJsonEditorDialog';
 import { graphqlClient } from '../../services/client';
 import {
-  DELETE_METER_INFO, GET_METER_INFO, INSERT_METER_INFO, UPDATE_METER_INFO,
+  DELETE_METER_INFO, INSERT_METER_INFO, UPDATE_METER_INFO,
 UPDATE_METER_INTERVAL,
 } from '../../services/query';
 import meterOptions from '../../config/meters.json';
@@ -18,6 +18,7 @@ import useAdminPasswordStore from '../../redux/store/useAdminPasswordStore';
 import { controlDocker } from '../../components/layout/controlDocker';
 import generateJsonConfig from '../../features/setup/components/GenerateJsonConfig';
 import { configInit } from '../../components/layout/globalvariable';
+import { getMeterRegisters } from '../../features/communicationSetup/services/communicationApi';
 
 const SetupPage = () => {
   // const [gatewayToken, setGatewayToken] = useState(localStorage.getItem('accessToken') || '');
@@ -31,7 +32,6 @@ const SetupPage = () => {
   const [currentJsonConfig, setCurrentJsonConfig] = useState({});
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
-  const [deletePasswordDialogOpen, setDeletePasswordDialogOpen] = useState(false);
   const [currentAction, setCurrentAction] = useState(null);
   const [isEditingInterval, setIsEditingInterval] = useState(false);
   const [intervalVal, setIntervalVal] = useState(10); // State for global interval
@@ -55,6 +55,69 @@ const SetupPage = () => {
     label: "",
     device: configInit.gatewayName,
     con: { baudRate: 9600, dataBits: 8, stopBits: 1, parity: 'even', lock: false },
+  };
+
+  const handleSaveParameters = async (slaveId, updatedConfig, selectedMask = []) => {
+    try {
+      // Always fetch latest config from backend to ensure unchecked rows remain unchanged
+      const latestUrl = `${configInit.appBaseUrl}/api/meter-registers?slave_id=${encodeURIComponent(slaveId)}&limit=1`;
+      const latestRes = await fetch(latestUrl);
+      let latestConfig = null;
+      if (latestRes.ok) {
+        const latestJson = await latestRes.json();
+        const latestRow = Array.isArray(latestJson) ? latestJson[0] : Array.isArray(latestJson?.data) ? latestJson.data[0] : null;
+        const cfg = latestRow?.config;
+        try { latestConfig = cfg ? (typeof cfg === 'string' ? JSON.parse(cfg) : cfg) : null; } catch { latestConfig = null; }
+      }
+      const currentBase = latestConfig || (updatedConfig && typeof updatedConfig === 'object' ? { ...updatedConfig, parameters: Array.isArray(updatedConfig.parameters) ? [...updatedConfig.parameters] : [] } : { parameters: [] });
+
+      const edited = updatedConfig?.parameters || [];
+      const original = currentBase?.parameters || [];
+      // Build lookup of edited rows by name along with selection state
+      const editedByName = new Map();
+      edited.forEach((row, i) => {
+        const name = row?.name;
+        if (typeof name === 'string' && name.length) {
+          editedByName.set(name, { row, selected: !!selectedMask[i] });
+        }
+      });
+
+      // Merge rows, setting active flag based on selection; use name-based merge when available
+      const mergedParams = original.map((origRow, idx) => {
+        const name = origRow?.name;
+        const info = (typeof name === 'string' && name.length) ? editedByName.get(name) : undefined;
+        if (info) {
+          const nextRow = info.selected ? (info.row ?? origRow) : origRow;
+          return { ...nextRow, active: info.selected };
+        }
+        const selected = !!selectedMask[idx];
+        const nextRow = selected ? (edited[idx] ?? origRow) : origRow;
+        return { ...nextRow, active: selected };
+      });
+      const finalConfig = { ...currentBase, parameters: mergedParams };
+
+      const url = `${configInit.appBaseUrl}/api/meter-registers/by-slave/${encodeURIComponent(slaveId)}/config`;
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ intervalTime: Number(intervalVal) || 10, config: finalConfig }),
+      });
+      if (!res.ok) {
+        let text = '';
+        try { text = await res.text(); } catch {}
+        throw new Error(`Save failed (${res.status}) ${text}`.trim());
+      }
+      // Update UI state optimistically
+      setMeterConfigurations(prev => Array.isArray(prev) ? prev.map(m => (
+        m?.meter_no === slaveId ? { ...m, config: finalConfig } : m
+      )) : prev);
+      toast.success('Parameters saved');
+      await fetchMeters();
+    } catch (e) {
+      console.error('Update meter config failed:', e);
+      toast.error(e.message || 'Failed to save parameters');
+      throw e;
+    }
   };
   const [newMeterConfig, setNewMeterConfig] = useState(initialMeterConfig);
   const [editingMeterConfig, setEditingMeterConfig] = useState(null);
@@ -113,34 +176,89 @@ const SetupPage = () => {
 
   const fetchMeters = async () => {
     try {
-      const data = await graphqlClient.request(GET_METER_INFO);
-      const meters = data?.allMeterConfigrations?.nodes || [];
-      // console.log("meters=>", meters, meterOptions);
-      const validMeters = meters.map(m => {
-        let parsedCon = m.con;
-        if (typeof parsedCon === 'string') {
-          try {
-            parsedCon = JSON.parse(parsedCon);
-          } catch (e) {
-            console.error('Failed to parse meter.con for meter', m.id || m.meterNo, e);
-            parsedCon = null;
+      const res = await getMeterRegisters({ limit: 500 });
+      console.log("meterRegisters", res);
+      const rows = Array.isArray(res)
+        ? res
+        : Array.isArray(res?.data)
+        ? res.data
+        : [];
+
+      // Group rows by meter (make, model, slave_id)
+      const meterMap = new Map();
+      rows.forEach((row) => {
+        const make = row.meter_make || row.make || '';
+        const model = row.meter_model || row.model || '';
+        const slaveId = row.slave_id ?? row.slaveId ?? null;
+        if (!make || !model || slaveId == null) return;
+        const key = `${make}__${model}__${slaveId}`;
+        if (!meterMap.has(key)) meterMap.set(key, []);
+        meterMap.get(key).push(row);
+      });
+
+      const validMeters = Array.from(meterMap.values()).map((rowsForMeter) => {
+        const first = rowsForMeter[0];
+        const make = first.meter_make || first.make || '';
+        const model = first.meter_model || first.model || '';
+        const slaveId = first.slave_id ?? first.slaveId ?? null;
+
+        const selectedModelDetails = meterOptions.find(
+          (d) => d.device_make === make && d.device_model === model
+        );
+
+        const meterName = selectedModelDetails?.device_name || first.meter_name || first.meterName || '';
+        const meterType = selectedModelDetails?.device_type || first.meter_type || first.meterType || '';
+
+        // Prefer new intervalTime (seconds); fallback to legacy scan_rate_ms
+        const intervalCandidates = rowsForMeter
+          .map((r) => {
+            const it = r.interval_time ?? r.intervalTime;
+            if (typeof it === 'number') return it;
+            const legacy = r.scan_rate_ms ?? r.scanRateMs;
+            return typeof legacy === 'number' ? Math.round(legacy / 1000) : undefined;
+          })
+          .filter((v) => typeof v === 'number');
+        const intervalSec = intervalCandidates.length ? intervalCandidates[0] : 10;
+
+        const con = {
+          baudRate: first.baud_rate ?? first.baudRate ?? 9600,
+          dataBits: first.data_bits ?? first.dataBits ?? 8,
+          stopBits: first.stop_bits ?? first.stopBits ?? 1,
+          parity: first.parity || 'even',
+          datatypeIfBulk: first.datatype_if_bulk ?? first.datatypeIfBulk ?? null,
+          lock: false,
+        };
+
+        // Parse config JSON from table if present
+        let config = null;
+        try {
+          if (first.config) {
+            config = typeof first.config === 'string' ? JSON.parse(first.config) : first.config;
           }
+        } catch (e) {
+          console.warn('Failed to parse config JSON for meter', make, model, slaveId, e);
+          config = null;
         }
+
         return {
-          ...m,
-          meter_no: m.meterNo,
-          meter_name: m.meterName,
-          meter_model: m.meterModel,
-          meter_make: m.meterMake,
-          meter_type: m.meterType,
-          con: parsedCon,
+          id: first.id,
+          device: configInit.gatewayName,
+          meter_no: slaveId,
+          meter_name: meterName,
+          meter_model: model,
+          meter_make: make,
+          meter_type: meterType,
+          label: first.label || `${meterName || `${make} ${model}`} id${slaveId}`,
+          interval: intervalSec,
+          con,
+          config,
         };
       });
-      // console.log("validMeters=>", validMeters);
 
       setMeterConfigurations(validMeters);
+
       if (validMeters.length > 0) {
-        const allIntervals = validMeters.map(m => m.interval);
+        const allIntervals = validMeters.map((m) => m.interval);
         const uniqueIntervals = Array.from(new Set(allIntervals));
         // Only update intervalVal if not editing
         if (!isEditingInterval) {
@@ -154,21 +272,20 @@ const SetupPage = () => {
         if (!isEditingInterval) setIntervalVal(null);
       }
 
-      const existingMeterNos = new Set(validMeters.map(m => m.meter_no));
+      const existingMeterNos = new Set(validMeters.map((m) => m.meter_no));
       let nextNo = 2;
       while (existingMeterNos.has(nextNo)) {
         nextNo++;
       }
       // Prevent overwriting editingMeterConfig while editing
-      setEditingMeterConfig(prev => {
+      setEditingMeterConfig((prev) => {
         if (!prev) return null;
         // If the meter being edited still exists, keep the local edits
-        const stillExists = validMeters.some(m => m.meter_no === prev.meter_no);
+        const stillExists = validMeters.some((m) => m.meter_no === prev.meter_no);
         return stillExists ? prev : null;
       });
     } catch (err) {
-      console.error("Meter config fetch error:", err);
-      // toast.error("Failed to load meter configurations.");
+      console.error('Meter config fetch error (REST):', err);
     } finally {
       setLoading(false);
     }
@@ -183,25 +300,17 @@ const SetupPage = () => {
     }
 
     try {
-      await Promise.all(
-        meterConfigurations.map(async (meter) => {
-          try {
-            if (!meter.id) {
-              console.error(`❌ Missing ID for meter`, meter);
-              return;
-            }
-
-            await graphqlClient.request(UPDATE_METER_INTERVAL, {
-              input: {
-                id: meter.id, // ✅ MUST be the `id` field, not meter_no
-                meterConfigrationPatch: { interval: newInterval }
-              }
-            });
-          } catch (err) {
-            console.error(`Failed to update meter ${meter.meter_no}`, err);
-          }
-        })
-      );
+      const url = `${configInit.appBaseUrl}/api/meter-registers/interval-time`;
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ intervalTime: Number(newInterval) }),
+      });
+      if (!res.ok) {
+        let text = '';
+        try { text = await res.text(); } catch {}
+        throw new Error(`Interval update failed (${res.status}) ${text}`.trim());
+      }
 
       setMeterConfigurations(prev =>
         prev.map(m => ({ ...m, interval: newInterval }))
@@ -407,13 +516,11 @@ const SetupPage = () => {
 
 
   const handleDeleteRequest = () => {
-    if (editingMeterConfig && expandedMeterIndex !== null) {
-
-      setCurrentAction('delete');
-      setDeletePasswordDialogOpen(true);
-    } else {
+    if (!editingMeterConfig || expandedMeterIndex === null) {
       toast.error("No meter selected for deletion.");
+      return;
     }
+    handleConfirmDelete();
   };
 
 
@@ -427,29 +534,34 @@ const SetupPage = () => {
     console.log("meterNoToDelete=>", typeof (meterNoToDelete), meterNoToDelete);
 
     try {
-      const data = await graphqlClient.request(DELETE_METER_INFO, {
-        input: {
-          id: meterNoToDelete
-        }
-      });
-      console.log("data", data.deleteMeterConfigrationById);
-      if (data.deleteMeterConfigrationById.meterConfigration) {
-        await fetch(`${configInit.appBaseUrl}/v2/api/db/measurements/${meterIdForRelatedData}`, {
-          method: 'DELETE', headers: { 'Content-Type': 'application/json' },
-        });
-        // Success toast shown by controlDocker
-        setDockerLoading(true);
-        try {
-          await controlDocker('server_container', 'restart');
-        } finally {
-          setDockerLoading(false);
-        }
-      } else {
-        toast.error("Meter deletion failed!", { toastId: TOAST_IDS.METER_DELETE });
+      const slaveId = editingMeterConfig.meter_no;
+      if (slaveId === undefined || slaveId === null || slaveId === '') {
+        toast.error('No Meter No. found for deletion', { toastId: TOAST_IDS.METER_DELETE });
+        return;
       }
+
+      const url = `${configInit.appBaseUrl}/api/meter-registers/by-slave/${slaveId}`;
+      const res = await fetch(url, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        let text = '';
+        try {
+          text = await res.text();
+        } catch {
+          text = '';
+        }
+        toast.error(`Delete failed (${res.status}) ${text || ''}`.trim(), { toastId: TOAST_IDS.METER_DELETE });
+        return;
+      }
+
+      toast.success(`Deleted meter registers for id${slaveId}`, { toastId: TOAST_IDS.METER_DELETE });
+      // Optimistically update UI so the deleted meter disappears immediately
+      setMeterConfigurations((prev) => (Array.isArray(prev) ? prev.filter((m) => m?.meter_no !== slaveId) : []));
       setExpandedMeterIndex(null);
       setEditingMeterConfig(null);
-      setDeletePasswordDialogOpen(false);
       setCurrentAction(null);
       await fetchMeters();
     } catch (error) {
@@ -472,8 +584,6 @@ const SetupPage = () => {
           } finally {
             setDockerLoading(false);
           }
-        } else if (currentAction === 'delete') {
-          await handleConfirmDelete();
         } else if (currentAction === 'dashboard') {
           setSaving(true);
           await handleEditDashboard();
@@ -483,9 +593,8 @@ const SetupPage = () => {
       } else {
         toast.error('Incorrect password', { toastId: TOAST_IDS.GENERIC_ERROR });
       }
-      if (currentAction !== 'delete' && currentAction !== 'dashboard') {
+      if (currentAction !== 'dashboard') {
         setPasswordDialogOpen(false);
-        setDeletePasswordDialogOpen(false);
       }
     } catch (error) {
       setSaving(false);
@@ -544,7 +653,6 @@ const SetupPage = () => {
                 <Chip label="Edit Interval" color="primary" disabled={meterConfigurations.length === 0} onClick={() => setIsEditingInterval(true)} size="medium" />
               </Typography>
             )}
-            <Button variant="contained" size="small" onClick={() => { setCurrentAction('add'); setPasswordDialogOpen(true); }}>Add New Device</Button>
           </Box>
         </Paper>
 
@@ -578,6 +686,7 @@ const SetupPage = () => {
                   setPasswordDialogOpen(true);
                 }}
                 onSave={handleSave}
+                onSaveParameters={handleSaveParameters}
                 onDelete={() => setConfirmDeleteDialogOpen(true)}
                 onClose={handleCloseDetails}
                 testResponse={testResponse}
@@ -646,16 +755,16 @@ const SetupPage = () => {
         />
 
         <SetupPasswordDialog
-          open={passwordDialogOpen || deletePasswordDialogOpen}
+          open={passwordDialogOpen}
           onClose={() => {
-            passwordDialogOpen ? setPasswordDialogOpen(false) : setDeletePasswordDialogOpen(false);
+            setPasswordDialogOpen(false);
             setCurrentAction(null);
           }}
           onConfirm={handlePasswordConfirm}
           dialogType={currentAction}
           actionDescription={
             currentAction === 'add' ? 'add a new meter' :
-              currentAction === 'delete' && editingMeterConfig ? `delete meter "${editingMeterConfig.label}" (ID: ${editingMeterConfig.meter_no})` : 'perform this action'
+              currentAction === 'dashboard' ? 'edit meter dashboard' : 'perform this action'
           }
         />
         <ConfirmDeleteDialog
@@ -663,7 +772,7 @@ const SetupPage = () => {
           onClose={() => setConfirmDeleteDialogOpen(false)}
           onConfirm={() => {
             setConfirmDeleteDialogOpen(false);
-            handleDeleteRequest();
+            handleConfirmDelete();
           }}
         />
       </Box>

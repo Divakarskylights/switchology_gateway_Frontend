@@ -26,7 +26,19 @@ export const AddMeterDialog = ({ open, onClose, config, onChange, onTest, onSave
             </Grid>
             <Grid item xs={12} md={6}>
               <ConfigItem label="BaudRate" value={config.con.baudRate} onChange={onChange} name="baudRate" select options={baudRates} />
-              <ConfigItem label="DataBits" value={config.con.dataBits} onChange={onChange} name="dataBits" select options={[{ value: 8, label: '8' }, { value: 16, label: '16' }]} />
+              <ConfigItem
+                label="DataBits"
+                value={config.con.dataBits}
+                onChange={onChange}
+                name="dataBits"
+                select
+                options={[
+                  { value: 5, label: '5' },
+                  { value: 6, label: '6' },
+                  { value: 7, label: '7' },
+                  { value: 8, label: '8' },
+                ]}
+              />
               <ConfigItem label="StopBits" value={config.con.stopBits} onChange={onChange} name="stopBits" select options={[{ value: 1, label: '1' }, { value: 2, label: '2' }]} />
               <ConfigItem label="Parity" value={config.con.parity} onChange={onChange} name="parity" select options={parities} />
             </Grid>

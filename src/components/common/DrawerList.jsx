@@ -16,6 +16,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined';
 import ElectricMeterOutlinedIcon from '@mui/icons-material/ElectricMeterOutlined';
 import SettingsInputComponentIcon from '@mui/icons-material/SettingsInputComponent';
+import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
 import useThemeChange from '../../redux/store/useThemeStore';
 import useRole from '../../redux/store/useRole';
 import { useSecureNavigation } from '../../hooks/useSecureNavigation';
@@ -31,7 +32,8 @@ const DrawerHeaderStyled = styled('div')(({ theme }) => ({
 
 const navItems = [
   { name: 'Home', route: '/dashboard', Icon: HomeOutlinedIcon, roles: ['ADMIN', 'VIEWER'] },
-  { name: 'Setup', route: '/admin/setup', Icon: EngineeringOutlinedIcon, roles: ['ADMIN'] },
+  { name: 'Added Devices', route: '/admin/setup', Icon: EngineeringOutlinedIcon, roles: ['ADMIN'] },
+  { name: 'Communication Setup', route: '/admin/communication-setup', Icon: SettingsEthernetIcon, roles: ['ADMIN'] },
   // { name: 'Relay Setup', route: '/admin/relay-setup', Icon: SettingsInputComponentIcon, roles: ['ADMIN'] },
   { name: 'Energy Monitoring', route: '/analytics/ems', Icon: AnalyticsOutlinedIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'KPI', route: '/analytics/kpi', Icon: AssessmentIcon, roles: ['ADMIN', 'VIEWER'] },
@@ -70,7 +72,8 @@ export const DrawerList = memo(({ open, setOpen, isXs }) => {
       </DrawerHeaderStyled>
       <List sx={{ pt: 1, px: 1.5 }}> {/* Increased horizontal padding */}
         {navItems.map((item, index) => {
-          const isAllowed = item.roles.includes(role);
+          // TEMP DEV MODE: allow all roles for navigation
+          const isAllowed = true;
           console.log('Menu item:', item.name, 'Role:', role, 'Roles allowed:', item.roles, 'Is allowed:', isAllowed);
           const isSelected = location.pathname === item.route;
           // console.log(isSelected);
@@ -85,9 +88,9 @@ export const DrawerList = memo(({ open, setOpen, isXs }) => {
             >
               <ListItem disablePadding sx={{ mb: 0.75 }}> {/* Slightly increased margin bottom */}
                 <ListItemButton
-                  onClick={() => isAllowed && handleNavigation(item.route)}
+                  onClick={() => handleNavigation(item.route)}
                   selected={isSelected}
-                  disabled={!isAllowed}
+                  disabled={false}
                   sx={{
                     borderRadius: '8px', // Consistent border radius
                     minHeight: 44,

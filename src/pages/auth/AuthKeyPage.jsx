@@ -11,28 +11,56 @@ const AuthKeyPage = ({
   redirectTo = '/dashboard',
   validKey = import.meta.env.VITE_AUTH_PRE || 'default-key',
 }) => {
-  const { navigateToDashboard } = useSecureNavigation();
+  const { navigateToDashboard, navigateToProfile, navigateToGateway } = useSecureNavigation();
   const { apiKey, error, handleInputChange } = useAuthKey({
     validKey,
     onSuccessRedirect: redirectTo,
   });
-  const { updateGatewayData } = useAuth();
+  const { updateGatewayData, hasProfile, checkGatewayStatus } = useAuth();
   const [loaded, setLoaded] = useState(false); // For animation
 
   useEffect(() => {
     setLoaded(true); // Trigger animation on mount
   }, []);
 
+  useEffect(() => {
+    const enforceGatewayState = async () => {
+      try {
+        const status = await checkGatewayStatus();
+        if (status?.needsSubscription) {
+          navigateToGateway('subscription');
+          return;
+        }
+        if (!status?.needsAuthentication) {
+          const profileExists = await hasProfile();
+          if (profileExists) {
+            navigateToDashboard();
+          } else {
+            navigateToProfile();
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to verify gateway state:', error);
+      }
+    };
+    enforceGatewayState();
+  }, [checkGatewayStatus, hasProfile, navigateToDashboard, navigateToGateway, navigateToProfile]);
+
   const handleSecureSubmit = async () => {
     try {
+      console.log("apopopo", apiKey, validKey);
       if (apiKey === validKey) {
         console.log('AuthKeyPage - Key matches, authentication successful');
 
               console.log('Authentication successful - gateway lock should be updated to true');
 
         await updateGatewayData(false)
-        // Use secure navigation to dashboard
-        navigateToDashboard();
+        const profileExists = await hasProfile();
+        if (profileExists) {
+          navigateToDashboard();
+        } else {
+          navigateToProfile();
+        }
       } else {
         toast.error('Invalid authentication key', { toastId: TOAST_IDS.LOGIN_ERROR });
         console.log('AuthKeyPage - Key does not match');
@@ -41,7 +69,12 @@ const AuthKeyPage = ({
     } catch (err) {
       console.warn('Error updating gateway lock:', err);
       // Still redirect even if update fails
-      navigateToDashboard();
+      const profileExists = await hasProfile().catch(() => true);
+      if (profileExists) {
+        navigateToDashboard();
+      } else {
+        navigateToProfile();
+      }
     }
 
   };

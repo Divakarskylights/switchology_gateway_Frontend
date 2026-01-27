@@ -4,16 +4,28 @@ import { TOAST_IDS } from "../../constants/toastIds";
 
 export const controlDocker = async (containerName, action) => {
   
-  const requestPromise = fetch(`${configInit.appBaseUrl}/v2/api/docker/control`, {
+  const requestPromise = fetch(`${configInit.appBaseUrl}/api/docker/control`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ containerName, action }),
   }).then(async (res) => {
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.error || `Failed to ${action} ${containerName}`);
+    let data = null;
+    try {
+      data = await res.json();
+    } catch {
+      data = null;
     }
-    return data;
+
+    if (!res.ok) {
+      const errMsg =
+        data?.detail?.error ||
+        data?.error ||
+        `Failed to ${action} ${containerName}`;
+      const errDetails = data?.detail?.details || '';
+      throw new Error([errMsg, errDetails].filter(Boolean).join(' - '));
+    }
+
+    return data || { message: action };
   });
 
   return toast.promise(requestPromise, {

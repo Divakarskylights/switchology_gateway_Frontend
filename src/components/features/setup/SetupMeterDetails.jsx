@@ -15,7 +15,8 @@ const defaultMeter = {
     baudRate: 9600,
     dataBits: 8,
     stopBits: 1,
-    parity: 'even'
+    parity: 'even',
+    datatypeIfBulk: null
   }
 };
 
@@ -38,9 +39,27 @@ export const MeterDetails = ({ meter = defaultMeter, onChange, onTest, onSave, o
           <Grid item xs={12} md={6}>
             <ConfigItem label="Label" value={meter?.label || ''} onChange={onChange} name="label" />
             <ConfigItem label="BaudRate" value={meter?.con?.baudRate || 9600} onChange={onChange} name="baudRate" select options={baudRates} />
-            <ConfigItem label="DataBits" value={meter?.con?.dataBits || 8} onChange={onChange} name="dataBits" select options={[{ value: 8, label: '8' }, { value: 16, label: '16' }]} />
+            <ConfigItem
+              label="DataBits"
+              value={meter?.con?.dataBits || 8}
+              onChange={onChange}
+              name="dataBits"
+              select
+              options={[
+                { value: 5, label: '5' },
+                { value: 6, label: '6' },
+                { value: 7, label: '7' },
+                { value: 8, label: '8' },
+              ]}
+            />
             <ConfigItem label="StopBits" value={meter?.con?.stopBits || 1} onChange={onChange} name="stopBits" select options={[{ value: 1, label: '1' }, { value: 2, label: '2' }]} />
             <ConfigItem label="Parity" value={meter?.con?.parity || 'even'} onChange={onChange} name="parity" select options={parities} />
+            <ConfigItem
+              label="Datatype (bulk)"
+              value={meter?.con?.datatypeIfBulk || 'n/a'}
+              name="datatypeIfBulk"
+              disabled
+            />
           </Grid>
         </Grid>
         {responseMessage && (

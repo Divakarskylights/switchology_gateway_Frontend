@@ -16,6 +16,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import MetersBillGeneratePage from "./pages/MetersBillGeneratePage";
 import { useAppInitialization } from "./hooks/useAppInitialization";
 import useAuth from "./hooks/useAuth";
+import CommunicationSetupPage from "./features/communicationSetup/pages/CommunicationSetupPage";
 
 const AppRoutes = () => {
   const { isLoading, hasProfile, roleLoaded } = useAppInitialization();
@@ -56,73 +57,52 @@ const AppRoutes = () => {
     );
   }
 
-  // Determine the default route based on authentication, profile, and gateway status
+  // Determine the default route (TEMP DEV: always dashboard)
   const getDefaultRoute = () => {
-    const loggedIn = isLoggedIn();
-    
-    console.log("getDefaultRoute - loggedIn:", loggedIn, "hasProfile:", hasProfile, "gatewayStatus:", gatewayStatus);
-    
-    // 1. FIRST PRIORITY: Gateway Lock - ONLY /gateway/auth
-    if (gatewayStatus?.needsAuthentication) {
-      console.log("Redirecting to /gateway/auth - gateway locked");
-      return "/gateway/auth";
-    }
-    
-    // 2. SECOND PRIORITY: Subscription - ONLY /gateway/subscription
-    if (gatewayStatus?.needsSubscription) {
-      console.log("Redirecting to /gateway/subscription - subscription inactive");
-      return "/gateway/subscription";
-    }
-    
-    // 3. THIRD PRIORITY: No Profile - go to profile creation
-    if (!hasProfile) {
-      console.log("Redirecting to /user/profile - no profile exists");
-      return "/user/profile";
-    }
-    
-    // 4. Profile exists but not logged in - go to login
-    if (hasProfile && !loggedIn) {
-      console.log("Redirecting to /auth/login - profile exists but not logged in");
-      return "/auth/login";
-    }
-    
-    // 5. Profile exists and logged in - go to dashboard
-    if (hasProfile && loggedIn) {
-      console.log("Redirecting to /dashboard - profile exists and logged in");
-      return "/dashboard";
-    }
-    
-    // 6. Default fallback
-    console.log("Redirecting to /dashboard - default fallback");
     return "/dashboard";
   };
 
   return (
     <Routes>
-      {/* All routes wrapped in ProtectedRoute for strict priority enforcement */}
-      <Route path="/auth/login" element={
-        <ProtectedRoute>
-          <LoginPage />
-        </ProtectedRoute>
-      } />
+      {/* Public: Login */}
+      <Route
+        path="/auth/login"
+        element={
+          isLoggedIn()
+            ? <Navigate to={getDefaultRoute()} replace />
+            : <LoginPage />
+        }
+      />
 
-      <Route path="/gateway/auth" element={
-        <ProtectedRoute>
-          <AuthKeyPage />
-        </ProtectedRoute>
-      } />
+      {/* Gateway authentication page (requires login, but no profile enforcement) */}
+      <Route
+        path="/gateway/auth"
+        element={
+          <ProtectedRoute enforceProfile={false}>
+            <DashboardLayout component={AuthKeyPage} />
+          </ProtectedRoute>
+        }
+      />
       
-      <Route path="/gateway/subscription" element={
-        <ProtectedRoute>
-          <SubscriptionPage />
-        </ProtectedRoute>
-      } />
+      {/* Gateway subscription page (requires login, but no profile enforcement) */}
+      <Route
+        path="/gateway/subscription"
+        element={
+          <ProtectedRoute enforceProfile={false}>
+            <DashboardLayout component={SubscriptionPage} />
+          </ProtectedRoute>
+        }
+      />
 
-      <Route path="/user/profile" element={
-        <ProtectedRoute>
-          <ProfilePage />
-        </ProtectedRoute>
-      } />
+      {/* Profile page: allow access without enforcing profile to avoid redirect loop */}
+      <Route
+        path="/user/profile"
+        element={
+          <ProtectedRoute enforceProfile={false}>
+            <DashboardLayout component={ProfilePage} />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Main app routes */}
       <Route path="/dashboard" element={
@@ -159,6 +139,12 @@ const AppRoutes = () => {
       <Route path="/admin/meter-config" element={
         <ProtectedRoute allowedRoles={['ADMIN']}>
           <DashboardLayout component={MetersBillGeneratePage} />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/admin/communication-setup" element={
+        <ProtectedRoute allowedRoles={['ADMIN']}>
+          <DashboardLayout component={CommunicationSetupPage} />
         </ProtectedRoute>
       } />
 

@@ -33,6 +33,8 @@ const DraggableNode = ({ nodeGlobalData }) => {
     })
   });
 
+  console.log("nodeGlobalData", nodeGlobalData)
+
   return (
     <div ref={drag} style={createNodeTemplate(nodeGlobalData.text, isDragging, nodeGlobalData.img)}>
       <span>{nodeGlobalData.text}</span>

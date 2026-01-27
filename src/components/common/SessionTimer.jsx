@@ -6,7 +6,7 @@ const SESSION_LIMIT = 10 * 60; // 2 minutes in seconds
 
 const SessionTimer = () => {
   const [remainingTime, setRemainingTime] = useState(SESSION_LIMIT);
-  const [enabled, setEnabled] = useState(true); // toggle on/off 
+  const [enabled, setEnabled] = useState(false); // toggle on/off (TEMP DEV: start disabled to avoid auto-logout loop)
   const { logout } = useAuth();
 
   // 🔹 Reset session timestamp 
@@ -26,7 +26,8 @@ const SessionTimer = () => {
   // 🔹 Track remaining time 
   const getRemainingTime = () => {
     const tokenDataStr = sessionStorage.getItem('secureTokenData');
-    if (!tokenDataStr) return 0;
+    // TEMP DEV: if no token, treat as full remaining time to avoid immediate logout
+    if (!tokenDataStr) return SESSION_LIMIT;
     try {
       const tokenData = JSON.parse(tokenDataStr);
       const createdAt = tokenData.createdAt;

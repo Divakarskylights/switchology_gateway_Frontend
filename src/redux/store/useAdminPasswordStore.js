@@ -2,28 +2,36 @@ import { create } from 'zustand';
 import { toast } from 'react-toastify';
 import { graphqlClient } from '../../services/client';
 import { GET_PROFILE_DATA } from '../../services/query';
+import { configInit } from '../../components/layout/globalvariable';
 
 const useAdminPasswordStore = create((set) => ({
-  nodeId: '',
-  userid: '',
-  adminPassword: '',
-  viewerPassword: '',
+  userid: "",
+  adminPassword: "",
+  viewerPassword: "",
   isLoading: false,
   error: null,
 
   fetchAdminPassword: async () => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null }); 
+
     try {
-      const data = await graphqlClient.request(GET_PROFILE_DATA);
-      console.log("cddfd", data);
-      if (data?.allProfiles?.nodes[0]?.adminPassword) {
-        set({ adminPassword: data.allProfiles.nodes[0].adminPassword, 
-          viewerPassword: data.allProfiles.nodes[0].viewerPassword, 
-          nodeId: data.allProfiles.nodes[0].nodeId,
-          userid: data.allProfiles.nodes[0].userid,
-          isLoading: false });
+      const response = await fetch(`${configInit.appBaseUrl}/api/profiles`);
+      const data = await response.json();
+
+      console.log("AdminPasswordStore_data:", data);
+
+      if (data?.adminPassword) {
+        set({
+          adminPassword: data.adminPassword,
+          viewerPassword: data.viewerPassword,
+          userid: data.userid,
+          isLoading: false,
+        });
       } else {
-        set({ error: "Could not retrieve admin password", isLoading: false });
+        set({
+          error: "Could not retrieve admin password",
+          isLoading: false,
+        });
         toast.error("Could not retrieve admin password for confirmation.");
       }
     } catch (error) {
@@ -34,8 +42,13 @@ const useAdminPasswordStore = create((set) => ({
   },
 
   clearAdminPassword: () => {
-    set({ adminPassword: '', viewerPassword: '', nodeId: '', userid: '', error: null });
-  }
+    set({
+      adminPassword: "",
+      viewerPassword: "",
+      userid: "",
+      error: null,
+    });
+  },
 }));
 
 export default useAdminPasswordStore; 
