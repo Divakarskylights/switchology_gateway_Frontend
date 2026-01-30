@@ -34,7 +34,7 @@ const navItems = [
   { name: 'Home', route: '/dashboard', Icon: HomeOutlinedIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'Added Devices', route: '/admin/setup', Icon: EngineeringOutlinedIcon, roles: ['ADMIN'] },
   { name: 'Communication Setup', route: '/admin/communication-setup', Icon: SettingsEthernetIcon, roles: ['ADMIN'] },
-  // { name: 'Relay Setup', route: '/admin/relay-setup', Icon: SettingsInputComponentIcon, roles: ['ADMIN'] },
+    { name: 'Relay Setup', route: '/admin/relay-setup', Icon: SettingsInputComponentIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'Energy Monitoring', route: '/analytics/ems', Icon: AnalyticsOutlinedIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'KPI', route: '/analytics/kpi', Icon: AssessmentIcon, roles: ['ADMIN', 'VIEWER'] },
   { name: 'Meter Billing', route: '/admin/meter-config', Icon: SpeedOutlinedIcon, roles: ['ADMIN'] },
@@ -72,9 +72,11 @@ export const DrawerList = memo(({ open, setOpen, isXs }) => {
       </DrawerHeaderStyled>
       <List sx={{ pt: 1, px: 1.5 }}> {/* Increased horizontal padding */}
         {navItems.map((item, index) => {
-          // TEMP DEV MODE: allow all roles for navigation
-          const isAllowed = true;
+          const isAllowed = !item.roles || !role ? false : item.roles.includes(role);
           console.log('Menu item:', item.name, 'Role:', role, 'Roles allowed:', item.roles, 'Is allowed:', isAllowed);
+          if (!isAllowed) {
+            return null;
+          }
           const isSelected = location.pathname === item.route;
           // console.log(isSelected);
 
@@ -90,7 +92,7 @@ export const DrawerList = memo(({ open, setOpen, isXs }) => {
                 <ListItemButton
                   onClick={() => handleNavigation(item.route)}
                   selected={isSelected}
-                  disabled={false}
+                  disabled={!isAllowed}
                   sx={{
                     borderRadius: '8px', // Consistent border radius
                     minHeight: 44,

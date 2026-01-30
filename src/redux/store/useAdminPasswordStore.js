@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { toast } from 'react-toastify';
-import { graphqlClient } from '../../services/client';
-import { GET_PROFILE_DATA } from '../../services/query';
-import { configInit } from '../../components/layout/globalvariable';
+import { fetchFirstProfile } from '../../services/profileService';
 
 const useAdminPasswordStore = create((set) => ({
   userid: "",
@@ -11,20 +9,19 @@ const useAdminPasswordStore = create((set) => ({
   isLoading: false,
   error: null,
 
-  fetchAdminPassword: async () => {
+  fetchAdminPassword: async (options = {}) => {
     set({ isLoading: true, error: null }); 
 
     try {
-      const response = await fetch(`${configInit.appBaseUrl}/api/profiles`);
-      const data = await response.json();
+      const profile = await fetchFirstProfile(options);
 
-      console.log("AdminPasswordStore_data:", data);
+      console.log("AdminPasswordStore_data:", profile);
 
-      if (data?.adminPassword) {
+      if (profile?.adminPassword || profile?.admin_password) {
         set({
-          adminPassword: data.adminPassword,
-          viewerPassword: data.viewerPassword,
-          userid: data.userid,
+          adminPassword: profile.adminPassword || profile.admin_password || "",
+          viewerPassword: profile.viewerPassword || profile.viewer_password || "",
+          userid: profile.userid || "",
           isLoading: false,
         });
       } else {
@@ -38,6 +35,7 @@ const useAdminPasswordStore = create((set) => ({
       console.error("Error fetching admin password:", error);
       set({ error: error.message, isLoading: false });
       toast.error("Failed to fetch admin password.");
+      throw error;
     }
   },
 
@@ -51,4 +49,4 @@ const useAdminPasswordStore = create((set) => ({
   },
 }));
 
-export default useAdminPasswordStore; 
+export default useAdminPasswordStore;

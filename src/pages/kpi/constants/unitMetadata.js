@@ -1,0 +1,161 @@
+export const unitOptions = [
+  "Nos (Numbers)",
+  "Sets",
+  "Pieces",
+  "Litres (L)",
+  "Millilitres (mL)",
+  "Cubic meters (m³)",
+  "Kilograms (kg)",
+  "Grams (g)",
+  "Tons (t)",
+  "Kilowatt-hour (kWh)",
+  "Megajoules (MJ)",
+  "British Thermal Unit (BTU)",
+  "Square meters (m²)",
+  "Square feet (ft²)",
+  "Hours (h)",
+  "Minutes (min)",
+  "Seconds (s)",
+  "Pallets",
+  "Batches",
+  "Cycles",
+  "Barrels (bbl)",
+  "Gallons (gal)",
+  "Cubic feet (cf)",
+  "Pieces per hour (P/hr)",
+  "Units per shift",
+  "Kilograms per hour (kg/h)",
+];
+
+export const unitInfo = [
+  {
+    unit: "Nos (Numbers)",
+    desc: "Count of individual items",
+    notes: "Discrete units, e.g., devices, products, parts",
+  },
+  {
+    unit: "Sets",
+    desc: "Grouped items or assemblies",
+    notes: "Furniture sets, equipment sets",
+  },
+  {
+    unit: "Pieces",
+    desc: "Individual components or small units",
+    notes: "Manufacturing parts, office supplies",
+  },
+  {
+    unit: "Litres (L)",
+    desc: "Volume of liquids",
+    notes: "Water, chemicals, fuel, beverages",
+  },
+  {
+    unit: "Millilitres (mL)",
+    desc: "Smaller volume units",
+    notes: "Lab chemicals, oils",
+  },
+  {
+    unit: "Cubic meters (m³)",
+    desc: "Larger volume units",
+    notes: "Bulk liquids, gases, wood stacks (stere)",
+  },
+  {
+    unit: "Kilograms (kg)",
+    desc: "Weight or mass",
+    notes: "Raw materials, bulk goods",
+  },
+  {
+    unit: "Grams (g)",
+    desc: "Smaller weight units",
+    notes: "Ingredients, powders",
+  },
+  {
+    unit: "Tons (t)",
+    desc: "Large weight units",
+    notes: "Coal, minerals, industrial bulk materials",
+  },
+  {
+    unit: "Kilowatt-hour (kWh)",
+    desc: "Energy consumption or production",
+    notes: "Electricity usage or generation",
+  },
+  {
+    unit: "Megajoules (MJ)",
+    desc: "Energy measurement",
+    notes: "Industrial energy, fuels",
+  },
+  {
+    unit: "British Thermal Unit (BTU)",
+    desc: "Energy measurement",
+    notes: "Heating, cooling, fuel energy",
+  },
+  {
+    unit: "Square meters (m²)",
+    desc: "Area measurement",
+    notes: "Floor space, production area",
+  },
+  {
+    unit: "Square feet (ft²)",
+    desc: "Area measurement",
+    notes: "Office, commercial space",
+  },
+  {
+    unit: "Hours (h)",
+    desc: "Time duration",
+    notes: "Production time, machine run time",
+  },
+  {
+    unit: "Minutes (min)",
+    desc: "Smaller time units",
+    notes: "Cycle times, process durations",
+  },
+  {
+    unit: "Seconds (s)",
+    desc: "Precise time measurement",
+    notes: "High-frequency process timing",
+  },
+  {
+    unit: "Pallets",
+    desc: "Unit load for transport/storage",
+    notes: "Industrial logistics, warehousing",
+  },
+  {
+    unit: "Batches",
+    desc: "Grouped production lots",
+    notes: "Chemical batches, food production batches",
+  },
+  {
+    unit: "Cycles",
+    desc: "Repetitive process counts",
+    notes: "Machine cycles, production cycles",
+  },
+  {
+    unit: "Barrels (bbl)",
+    desc: "Volume for petroleum products",
+    notes: "Oil industry volume measurement (1 barrel ≈ 159 litres)",
+  },
+  {
+    unit: "Gallons (gal)",
+    desc: "Volume (imperial/US)",
+    notes: "Fuel, liquids",
+  },
+  {
+    unit: "Cubic feet (cf)",
+    desc: "Volume (imperial)",
+    notes: "Gas volumes, wood volume",
+  },
+  {
+    unit: "Pieces per hour (P/hr)",
+    desc: "Production rate",
+    notes: "Manufacturing throughput",
+  },
+  {
+    unit: "Units per shift",
+    desc: "Production quantity per work shift",
+    notes: "Factory production KPIs",
+  },
+  {
+    unit: "Kilograms per hour (kg/h)",
+    desc: "Production mass flow rate",
+    notes: "Continuous process industries",
+  },
+];

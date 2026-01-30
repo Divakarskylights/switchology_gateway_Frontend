@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Box, CircularProgress, Typography, Grid, Grow, Paper } from '@mui/material'; // Added Grow and Paper
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { graphqlClient } from "../../services/client";
-import { INSERT_PROFILE_DATA, UPDATE_PROFILE_BY_USERID, GET_PROFILE_DATA } from "../../services/query";
 import { ProfileForm } from "../../features/profile/components/ProfileForm";
 import { configInit } from '../../components/layout/globalvariable';
 import { clearToken } from '../../utils/secureUrls';
+import { fetchFirstProfile, invalidateProfilesCache } from '../../services/profileService';
 // import { useSecureNavigation } from '../../hooks/useSecureNavigation';
 
 function ProfilePage() {
@@ -15,6 +14,30 @@ function ProfilePage() {
 
     // const { navigateToDashboard } = useSecureNavigation();
     const gatewayName = configInit.gatewayName || "";
+
+    const applyProfileData = (profile, isMountedRef) => {
+        if (!isMountedRef.current) return;
+        if (profile) {
+            setProfileData(prev => ({
+                ...prev,
+                gatewayname: profile.gatewayName || profile.gatewayname || gatewayName,
+                name: profile.name || '',
+                buildingName: profile.buildingName || profile.building_name || '',
+                address: profile.address || '',
+                email: profile.email || '',
+                organization: profile.orgname || profile.organization || '',
+                userPresent: true,
+                userid: profile.userid,
+                dbAdminPass: profile.adminPassword || profile.admin_password || '',
+                dbViewerPass: profile.viewerPassword || profile.viewer_password || '',
+            }));
+        } else {
+            setProfileData(prev => ({
+                ...prev,
+                userPresent: false
+            }));
+        }
+    };
 
     const [profileData, setProfileData] = useState({
         gatewayname: gatewayName,
@@ -46,78 +69,75 @@ function ProfilePage() {
 
     useEffect(() => {
         console.log("ProfilePage - useEffect started");
+        const isMountedRef = { current: true };
+        let redirectedToServerIssue = false;
+
+        const isLikelyNetworkError = (error) => {
+            if (!error) return false;
+            const message = String(error?.message || '').toLowerCase();
+            return message.includes('failed to fetch') || message.includes('networkerror') || message.includes('network error');
+        };
+
         const fetchProfileData = async () => {
             try {
                 console.log("ProfilePage - fetching profile data...");
-                const data = await graphqlClient.request(GET_PROFILE_DATA);
-                const profile = data?.allProfiles?.nodes?.[0];
-                // console.log("profile=>", profile);
-
-                if (profile) {
-                    setProfileData(prev => ({
-                        ...prev,
-                        gatewayname: profile.gatewayName || gatewayName,
-                        name: profile.name || '',
-                        buildingName: profile.buildingName || '',
-                        address: profile.address || '',
-                        email: profile.email || '',
-                        organization: profile.orgname || '',
-                        userPresent: true,
-                        userid: profile.userid,
-                        dbAdminPass: profile.adminPassword || '',
-                        dbViewerPass: profile.viewerPassword || '',
-                    }));
-                } else {
-                    setProfileData(prev => ({
-                        ...prev,
-                        userPresent: false
-                    }));
-                }
+                const profile = await fetchFirstProfile();
+                applyProfileData(profile, isMountedRef);
             } catch (error) {
                 console.error('Error fetching profile data:', error);
-                toast.error('Failed to fetch profile data');
+                if (isLikelyNetworkError(error)) {
+                    redirectedToServerIssue = true;
+                    navigate('/server-issue', {
+                        replace: true,
+                        state: { from: '/user/profile', reason: 'profile-api-unreachable' }
+                    });
+                } else if (isMountedRef.current) {
+                    toast.error('Failed to fetch profile data');
+                }
             } finally {
-                setLoading(false);
-                setShowContent(true);
-                console.log("ProfilePage - loading finished, showContent set to true");
+                if (isMountedRef.current && !redirectedToServerIssue) {
+                    setLoading(false);
+                    setShowContent(true);
+                    console.log("ProfilePage - loading finished, showContent set to true");
+                }
             }
         };
         fetchProfileData();
-    }, [gatewayName]);
+
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, [gatewayName, navigate]);
 
     const handleSubmit = async (formData) => {
         try {
             if (profileData.userPresent) {
                 // Update existing profile using userid
-                const updateVariables = {
-                    input: {
-                        userid: profileData.userid,
-                        profilePatch: {
-                            userid: profileData.userid,
-                            name: formData.name,
-                            buildingName: formData.buildingName,
-                            address: formData.address,
-                            email: formData.email,
-                            orgname: formData.organization,
-                            adminPassword: checkboxStates.resetAdmin ? (formData.newpassword || '0000') : profileData.dbAdminPass,
-                            viewerPassword: checkboxStates.resetViewer ? (formData.conformpassword || '0000') : profileData.dbViewerPass,
-                        }
-                    }
+                const updatePayload = {
+                    name: formData.name,
+                    building_name: formData.buildingName,
+                    address: formData.address,
+                    email: formData.email,
+                    orgname: formData.organization,
+                    adminPassword: checkboxStates.resetAdmin ? (formData.newpassword || '0000') : profileData.dbAdminPass,
+                    viewerPassword: checkboxStates.resetViewer ? (formData.conformpassword || '0000') : profileData.dbViewerPass,
                 };
 
-                await graphqlClient.request(UPDATE_PROFILE_BY_USERID, updateVariables);
+                const response = await fetch(`${configInit.appBaseUrl}/api/profiles/${encodeURIComponent(profileData.userid)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatePayload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
                 toast.success("Profile updated successfully");
+                invalidateProfilesCache();
             } else {
                 // Create new profile
                 // Validate passwords before creating profile
-                if ((formData.adminPassword || '').length < 4) {
-                    toast.error('Admin password must be at least 4 characters');
-                    return;
-                }
-                if ((formData.viewerPassword || '').length < 4) {
-                    toast.error('Viewer password must be at least 4 characters');
-                    return;
-                }
                 if (formData.adminPassword !== formData.adminConfirmPassword) {
                     toast.error('Admin passwords do not match');
                     return;
@@ -126,37 +146,54 @@ function ProfilePage() {
                     toast.error('Viewer passwords do not match');
                     return;
                 }
-                if (formData.adminPassword === formData.viewerPassword) {
-                    toast.error('Admin and Viewer passwords must be different');
-                    return;
-                }
-                const createVariables = {
-                    input: {
-                        profile: {
-                            userid: formData.name.toLowerCase().replace(/\s+/g, ''),
-                            name: formData.name,
-                            buildingName: formData.buildingName,
-                            address: formData.address,
-                            email: formData.email,
-                            orgname: formData.organization,
-                            // Use the actual entered passwords from the new profile form
-                            adminPassword: formData.adminPassword || '0000',
-                            viewerPassword: formData.viewerPassword || '0000',
-                            gatewayName: formData.gatewayname,
-                        }
-                    }
+                const payload = {
+                    userid: formData.name.toLowerCase().replace(/\s+/g, ''),
+                    name: formData.name,
+                    building_name: formData.buildingName,
+                    address: formData.address,
+                    email: formData.email,
+                    orgname: formData.organization,
+                    adminPassword: formData.adminPassword || '0000',
+                    viewerPassword: formData.viewerPassword || '0000',
+                    gatewayName: formData.gatewayname,
                 };
-                await graphqlClient.request(INSERT_PROFILE_DATA, createVariables);
-                toast.success("Profile created successfully");
-                // Clear any existing auth/session and go to login
-                try { clearToken(); } catch { }
-                try { localStorage.removeItem('userid'); } catch { }
-                try { localStorage.removeItem('userRole'); } catch { }
-                try { sessionStorage.clear(); } catch { }
-                navigate('/auth/login', { replace: true });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 700);
+
+                const saveProfile = async () => {
+                    const response = await fetch(`${configInit.appBaseUrl}/api/profiles`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    toast.success("Profile created successfully");
+                    invalidateProfilesCache();
+                    // Clear any existing auth/session and go to login
+                    try { clearToken(); } catch { }
+                    try { localStorage.removeItem('userid'); } catch { }
+                    try { localStorage.removeItem('userRole'); } catch { }
+                    try { sessionStorage.clear(); } catch { }
+                    navigate('/auth/login', { replace: true });
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 700);
+                };
+
+                try {
+                    await saveProfile();
+                } catch (error) {
+                    if (error.message?.includes('Failed to fetch')) {
+                        navigate('/server-issue', {
+                            replace: true,
+                            state: { from: '/user/profile', reason: 'profile-save-network-error' }
+                        });
+                        return;
+                    }
+                    throw error;
+                }
             }
         } catch (error) {
             console.error('Error saving profile:', error);

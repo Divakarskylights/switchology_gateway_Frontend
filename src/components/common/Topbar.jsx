@@ -17,9 +17,10 @@ import SessionTimer from "./SessionTimer";
 import useAuth from "../../hooks/useAuth";
 import ProfileUpdateDialog from "./ProfileUpdateDialog";
 import { useLocation } from "react-router-dom";
+import useRole from "../../redux/store/useRole";
 
 const ProfileMenu = React.memo(
-  ({ anchorEl, onClose, onLogout, onProfileClick }) => (
+  ({ anchorEl, onClose, onLogout, onProfileClick, isAdmin }) => (
     <Menu
       anchorEl={anchorEl}
       open={Boolean(anchorEl)}
@@ -46,7 +47,7 @@ const ProfileMenu = React.memo(
     >
       <MenuItem onClick={onProfileClick} sx={{ gap: 1, px: 2, py: 1 }}>
         <AccountCircle fontSize="small" />
-        <Typography variant="body2">Profile</Typography>
+        <Typography variant="body2">{isAdmin ? "Edit Profile" : "View Profile"}</Typography>
       </MenuItem>
       <MenuItem
         onClick={onLogout}

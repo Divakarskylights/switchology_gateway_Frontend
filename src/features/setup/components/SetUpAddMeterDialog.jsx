@@ -122,5 +122,3 @@ export const AddMeterDialog = ({ open, onClose, config, onChange, onTest, onSave
       </Dialog>
     );
   };
-
-    

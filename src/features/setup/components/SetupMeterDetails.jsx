@@ -43,7 +43,7 @@ export const MeterDetails = ({
   const [localConfig, setLocalConfig] = React.useState(meter?.config || null);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [paramPage, setParamPage] = React.useState(0);
-  const pageSize = 25;
+  const pageSize = 30;
   const isValidNumber = (v) => {
     if (v === '' || v === null || v === undefined) return false;
     const n = Number(v);

@@ -24,9 +24,11 @@ import useRole from "../../redux/store/useRole";
 import { IOSSwitch } from "./IOSSwitch";
 import { configInit } from "../layout/globalvariable";
 import { TOAST_IDS } from "../../constants/toastIds";
+import { fetchFirstProfile } from "../../services/profileService";
 
 const ProfileUpdateDialog = ({ open, onClose }) => {
   const { role } = useRole();
+  const isAdmin = role === "ADMIN";
   const [profileData, setProfileData] = useState({
     name: "",
     buildingName: "",
@@ -65,39 +67,20 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
     setLoading(true);
     setError(null);
     try {
-      // const data = await graphqlClient.request(GET_PROFILE_DATA);
-
-      // const currentUserId = localStorage.getItem("userid");
-
-      const response = await fetch(`${configInit.appBaseUrl}/api/profiles`);
-
-      console.log("profile_icon_response:", response);
-
-      if (response.ok) {
-        const data = await response.json();
-        // console.log("ProfileData:", data);
-
-        // const profile = data?.allProfiles?.nodes?.find(
-        //   (p) => p.userid === currentUserId
-        // );
-
-        // console.log("Profile:", profile);
-        if (data) {
-          console.log("Profile_api_data:", data);
-          // const profileData = data
-          setProfileData({
-            name: data.name || "",
-            buildingName: data.building_name || "",
-            address: data.address || "",
-            email: data.email || "",
-            organization: data.orgname || "",
-            userId: data.userid || "",
-            newpassword: "",
-            conformpassword: "",
-          });
-        } else {
-          setError("Profile not found");
-        }
+      const data = await fetchFirstProfile();
+      if (data) {
+        setProfileData({
+          name: data.name || "",
+          buildingName: data.building_name || data.buildingName || "",
+          address: data.address || "",
+          email: data.email || "",
+          organization: data.orgname || data.organization || "",
+          userId: data.userid || "",
+          newpassword: "",
+          conformpassword: "",
+        });
+      } else {
+        setError("Profile not found");
       }
     } catch (error) {
       console.error("Error fetching profile data:", error);
@@ -207,6 +190,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
   };
 
   const validateProfileForm = () => {
+    if (!isAdmin) return [];
     const errors = [];
 
     // Required profile fields
@@ -238,6 +222,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
   };
 
   const handleInputChange = (e) => {
+    if (!isAdmin) return;
     const { name, value } = e.target;
     setProfileData((prev) => ({
       ...prev,
@@ -247,6 +232,11 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isAdmin) {
+      toast.info("Viewer role has read-only access to profile settings.");
+      return;
+    }
 
     const errors = validateProfileForm();
 
@@ -370,7 +360,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                 value={profileData.name}
                 onChange={handleInputChange}
                 required
-                // disabled={role !== "ADMIN"}
+                disabled={!isAdmin}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -382,7 +372,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                 value={profileData.buildingName}
                 onChange={handleInputChange}
                 required
-                // disabled={role !== "ADMIN"}
+                disabled={!isAdmin}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -394,7 +384,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                 value={profileData.address}
                 onChange={handleInputChange}
                 required
-                // disabled={role !== "ADMIN"}
+                disabled={!isAdmin}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -407,7 +397,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                 value={profileData.email}
                 onChange={handleInputChange}
                 required
-                // disabled={role !== "ADMIN"}
+                disabled={!isAdmin}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -419,13 +409,11 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
                 value={profileData.organization}
                 onChange={handleInputChange}
                 required
-                // disabled={role !== "ADMIN"}
+                disabled={!isAdmin}
               />
             </Grid>
 
-            {
-              // role === "ADMIN"
-              true && (
+            {isAdmin && (
                 <>
                   <Grid item xs={12}>
                     <Typography
@@ -708,6 +696,11 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
               )
             }
           </Grid>
+          {!isAdmin && (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+              You are in viewer mode. Profile details are read-only; contact an administrator to make changes.
+            </Typography>
+          )}
         </Box>
       </DialogContent>
 
@@ -718,7 +711,7 @@ const ProfileUpdateDialog = ({ open, onClose }) => {
         <Button
           onClick={handleSubmit}
           variant="contained"
-          disabled={saving || loading}
+          disabled={saving || loading || !isAdmin}
           sx={{ minWidth: 100 }}
         >
           {saving ? <CircularProgress size={20} /> : "Update Profile"}

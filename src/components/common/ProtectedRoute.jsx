@@ -2,14 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
 import useAuth from '../../hooks/useAuth';
+import useRole from '../../redux/store/useRole';
 
 // Enforces access based on:
 // - Logged-in state
 // - Gateway status (lock/subscription)
 // - Optional profile presence (enforceProfile)
-const ProtectedRoute = ({ children, enforceProfile = true }) => {
+// - Optional role restriction via allowedRoles
+const ProtectedRoute = ({ children, enforceProfile = true, allowedRoles }) => {
   const location = useLocation();
   const { isLoggedIn, checkGatewayStatus, hasProfile } = useAuth();
+  const { role } = useRole();
   const [loading, setLoading] = useState(true);
   const [redirectTo, setRedirectTo] = useState(null);
 
@@ -24,9 +27,25 @@ const ProtectedRoute = ({ children, enforceProfile = true }) => {
         return;
       }
 
-      // 2) Gateway status (lock/subscription)
+      // 2) Role enforcement, if provided
+      if (allowedRoles && allowedRoles.length > 0) {
+        if (!role || !allowedRoles.includes(role)) {
+          if (!cancelled) {
+            setRedirectTo('/dashboard');
+            setLoading(false);
+          }
+          return;
+        }
+      }
+
+      // 3) Gateway status (network/lock/subscription)
       const status = await checkGatewayStatus();
       if (!cancelled) {
+        if (status?.networkError) {
+          setRedirectTo('/server-issue');
+          setLoading(false);
+          return;
+        }
         if (status?.needsAuthentication) {
           setRedirectTo('/gateway/auth');
           setLoading(false);
@@ -39,7 +58,7 @@ const ProtectedRoute = ({ children, enforceProfile = true }) => {
         }
       }
 
-      // 3) Profile presence (skip when already on profile page)
+      // 4) Profile presence (skip when already on profile page)
       if (enforceProfile && location.pathname !== '/user/profile') {
         try {
           const hasProf = await hasProfile();
@@ -60,7 +79,7 @@ const ProtectedRoute = ({ children, enforceProfile = true }) => {
     return () => {
       cancelled = true;
     };
-  }, [checkGatewayStatus, enforceProfile, hasProfile, isLoggedIn, location.pathname]);
+  }, [allowedRoles, checkGatewayStatus, enforceProfile, hasProfile, isLoggedIn, location.pathname, role]);
 
   if (loading) {
     return (

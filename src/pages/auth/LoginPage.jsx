@@ -28,6 +28,16 @@ const CustomTabPanel = React.forwardRef(function CustomTabPanel(props, ref) {
 });
 
 
+const isLikelyNetworkError = (error) => {
+    if (!error) return false;
+    const message = String(error.message || '').toLowerCase();
+    return message.includes('failed to fetch') ||
+        message.includes('networkerror') ||
+        message.includes('network error') ||
+        message.includes('err_connection_refused') ||
+        error.name === 'TypeError';
+};
+
 const LoginPage = () => {
     const theme = useTheme(); // Added useTheme
     const navigate = useNavigate();
@@ -66,6 +76,11 @@ const LoginPage = () => {
                 }
             } catch (err) {
                 console.error('Error fetching profile data:', err);
+                if (isLikelyNetworkError(err)) {
+                    navigate('/server-issue', { replace: true, state: { from: '/auth/login', reason: 'login-profile-fetch' } });
+                } else {
+                    toast.error('Failed to fetch profile data', { toastId: TOAST_IDS.PROFILE_UPDATE_ERROR });
+                }
             }
         };
 

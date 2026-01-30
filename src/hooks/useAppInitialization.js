@@ -1,9 +1,18 @@
 import { useState, useEffect, useRef } from "react";
-import { graphqlClient } from "../services/client";
-import { GET_PROFILE_DATA } from "../services/query";
 import useRole from "../redux/store/useRole";
 import useGateWayName from "../redux/store/useGateWayName";
 import { configInit } from "../components/layout/globalvariable";
+import { fetchProfilesList } from "../services/profileService";
+
+const isLikelyNetworkError = (err) => {
+  if (!err) return false;
+  const message = String(err.message || '').toLowerCase();
+  return message.includes('failed to fetch') ||
+    message.includes('networkerror') ||
+    message.includes('network error') ||
+    message.includes('err_connection_refused') ||
+    err.name === 'TypeError';
+};
 
 export function useAppInitialization() {
   const [isLoading, setIsLoading] = useState(true);
@@ -11,6 +20,7 @@ export function useAppInitialization() {
   const [hasProfile, setHasProfile] = useState(false);
   const [roleLoaded, setRoleLoaded] = useState(false);
   const [systemInfo, setSystemInfo] = useState(null);
+  const [networkError, setNetworkError] = useState(false);
 
   const { setGateWayId } = useGateWayName();
   const { role, setRole } = useRole();
@@ -32,8 +42,8 @@ export function useAppInitialization() {
 
       // Fetch profile data
       try {
-        const response = await fetch(`${configInit.appBaseUrl}/api/profiles`);
-        const profiles = await response.json();
+        const profiles = await fetchProfilesList();
+        setNetworkError(false);
         
         // Check if any profile exists
         if (profiles.length > 0) {
@@ -51,7 +61,10 @@ export function useAppInitialization() {
           }
         }
       } catch (err) {
-        console.error("GraphQL Init Error:", err);
+        console.error("Profile init error:", err);
+        if (isLikelyNetworkError(err)) {
+          setNetworkError(true);
+        }
       } finally {
         setProfileLoaded(true);
         setIsLoading(false);
@@ -62,11 +75,15 @@ export function useAppInitialization() {
         const res = await fetch(`${configInit.appBaseUrl}/api/system-info`, {
           signal: AbortSignal.timeout(5000),
         });
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
         const fastData = await res.json();
         const hostname = fastData?.hostname || "will-be-updated";
         configInit.gatewayName = hostname;
         setGateWayId(hostname);
         setSystemInfo(fastData); // Set the fresh system info
+        setNetworkError(false);
     
       } catch (err) {
         const name = err?.name || '';
@@ -74,6 +91,9 @@ export function useAppInitialization() {
           console.warn('Fast system info request timed out');
         } else {
           console.error('Fast system info error:', err);
+          if (isLikelyNetworkError(err)) {
+            setNetworkError(true);
+          }
         }
       }
     };
@@ -91,5 +111,6 @@ export function useAppInitialization() {
     role,
     roleLoaded,
     systemInfo,
+    networkError,
   };
 }

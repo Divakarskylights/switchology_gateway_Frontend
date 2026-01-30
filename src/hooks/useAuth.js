@@ -1,6 +1,34 @@
 import { toast } from 'react-toastify';
 import { clearToken, getValidToken } from '../utils/secureUrls';
 import { configInit } from '../components/layout/globalvariable';
+import { fetchProfilesList, invalidateProfilesCache } from '../services/profileService';
+
+let cachedProfilePresence = null;
+const HAS_PROFILE_STORAGE_KEY = 'hasProfile';
+const GATEWAY_STATUS_CACHE_TTL = 4000;
+let gatewayStatusCache = null;
+let gatewayStatusCachedAt = 0;
+let gatewayStatusPromise = null;
+
+const getStoredProfilePresence = () => {
+  try {
+    const stored = sessionStorage.getItem(HAS_PROFILE_STORAGE_KEY);
+    if (stored === 'true') return true;
+    if (stored === 'false') return false;
+  } catch (err) {
+    console.warn('Unable to read stored profile flag:', err);
+  }
+  return null;
+};
+
+const persistProfilePresence = (value) => {
+  cachedProfilePresence = value;
+  try {
+    sessionStorage.setItem(HAS_PROFILE_STORAGE_KEY, value ? 'true' : 'false');
+  } catch (err) {
+    console.warn('Unable to persist profile flag:', err);
+  }
+};
 
 const useAuth = () => {
 
@@ -39,21 +67,6 @@ const useAuth = () => {
     return data;
   };
 
-  const parseProfilesPayload = (payload) => {
-    if (!payload) return [];
-    if (Array.isArray(payload)) return payload;
-    if (Array.isArray(payload?.data)) return payload.data;
-    if (Array.isArray(payload?.profiles)) return payload.profiles;
-    if (Array.isArray(payload?.nodes)) return payload.nodes;
-    if (Array.isArray(payload?.allProfiles?.nodes)) return payload.allProfiles.nodes;
-    return [payload];
-  };
-
-  const fetchProfiles = async () => {
-    const data = await getJson('/api/profiles');
-    return parseProfilesPayload(data);
-  };
-
   // Fetch gateway row via REST API
   const getGatewayData = async () => {
     try {
@@ -75,11 +88,20 @@ const useAuth = () => {
 
   // Check if at least one profile exists in the system
   const hasProfile = async () => {
+    if (cachedProfilePresence === true) return true;
+    const storedPresence = getStoredProfilePresence();
+    if (storedPresence === true) {
+      cachedProfilePresence = true;
+      return true;
+    }
     try {
-      const profiles = await fetchProfiles();
-      return profiles.length > 0;
+      const profiles = await fetchProfilesList();
+      const exists = profiles.length > 0;
+      persistProfilePresence(exists);
+      return exists;
     } catch (error) {
       console.error("Error checking profile:", error);
+      if (cachedProfilePresence === true || storedPresence === true) return true;
       return false;
     }
   };
@@ -135,24 +157,50 @@ const useAuth = () => {
     return true;
   };
 
-  const checkGatewayStatus = async () => {
-    const gateway = await getGatewayData();
-    console.log("gateway2222", gateway);
-    
+  const buildGatewayStatus = (gateway) => {
     if (gateway && gateway.__networkError) {
       return { networkError: true, needsAuthentication: false, needsSubscription: false };
     }
-
-    if (!gateway) return { needsAuthentication: false, needsSubscription: false };
-
+    if (!gateway) {
+      return { networkError: false, needsAuthentication: false, needsSubscription: false };
+    }
     const locked = asBool(gateway.gatewayLock, false);
     const subscriptionActive = asBool(gateway.subscriptionIsActive, true);
-
     return {
       networkError: false,
       needsAuthentication: locked,
       needsSubscription: !subscriptionActive
     };
+  };
+
+  const invalidateGatewayStatusCache = () => {
+    gatewayStatusCache = null;
+    gatewayStatusCachedAt = 0;
+    gatewayStatusPromise = null;
+  };
+
+  const checkGatewayStatus = async () => {
+    const now = Date.now();
+    if (gatewayStatusCache && now - gatewayStatusCachedAt < GATEWAY_STATUS_CACHE_TTL) {
+      return gatewayStatusCache;
+    }
+    if (gatewayStatusPromise) {
+      return gatewayStatusPromise;
+    }
+
+    gatewayStatusPromise = (async () => {
+      const gateway = await getGatewayData();
+      const status = buildGatewayStatus(gateway);
+      gatewayStatusCache = status;
+      gatewayStatusCachedAt = Date.now();
+      gatewayStatusPromise = null;
+      return status;
+    })().catch((err) => {
+      gatewayStatusPromise = null;
+      throw err;
+    });
+
+    return gatewayStatusPromise;
   };
 
   const updateGatewayData = async (lockStatus) => {
@@ -167,6 +215,7 @@ const useAuth = () => {
         subscriptionIsActive: true,
       };
       const updated = await putJson(`/api/gateway-status/${encodeURIComponent(gateway.id)}`, body);
+      invalidateGatewayStatusCache();
       toast.success("Gateway updated successfully!");
       return updated?.gateway || updated?.gatewaystatus || updated;
     } catch (error) {
@@ -182,6 +231,7 @@ const useAuth = () => {
     checkGatewayAuth,
     checkGatewayStatus,
     updateGatewayData,
+    invalidateGatewayStatusCache,
     isLoggedIn,
     hasProfile,
     hasAnyProfile,

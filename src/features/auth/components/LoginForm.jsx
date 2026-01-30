@@ -25,8 +25,7 @@ const LoginForm = ({
         label={`${role} Password`}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        error={!!password && password.length < 4}
-        helperText={password && password.length < 4 ? 'Minimum 4 characters' : ''}
+        required
       />
 
       {role === 'Admin' && (
@@ -45,7 +44,7 @@ const LoginForm = ({
         type="submit"
         variant="contained"
         size="small"
-        disabled={password.length !== 4}
+        disabled={!password}
         // sx={{ marginTop: 1 }}
       >
         Login

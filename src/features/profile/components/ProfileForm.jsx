@@ -144,8 +144,6 @@ export const ProfileForm = ({ profileData, onChange, onSubmit, isNewProfile, onC
                           name="newpassword"
                           value={profileData.newpassword}
                           onChange={onChange}
-                          error={!!profileData.newpassword && profileData.newpassword.length < 4}
-                          helperText={profileData.newpassword && profileData.newpassword.length < 4 ? 'Minimum 4 characters' : ''}
                         />
                       </Box>
                     </Grid>
@@ -192,8 +190,6 @@ export const ProfileForm = ({ profileData, onChange, onSubmit, isNewProfile, onC
                           name="conformpassword"
                           value={profileData.conformpassword}
                           onChange={onChange}
-                          error={!!profileData.conformpassword && profileData.conformpassword.length < 4}
-                          helperText={profileData.conformpassword && profileData.conformpassword.length < 4 ? 'Minimum 4 characters' : ''}
                         />
                       </Box>
                     </Grid>
@@ -215,8 +211,6 @@ export const ProfileForm = ({ profileData, onChange, onSubmit, isNewProfile, onC
                 value={profileData.adminPassword}
                 onChange={onChange}
                 required
-                error={!!profileData.adminPassword && profileData.adminPassword.length < 4}
-                helperText={profileData.adminPassword && profileData.adminPassword.length < 4 ? 'Minimum 4 characters' : ''}
               />
             </Grid>
             <Grid item xs={12}>
@@ -238,8 +232,6 @@ export const ProfileForm = ({ profileData, onChange, onSubmit, isNewProfile, onC
                 value={profileData.viewerPassword}
                 onChange={onChange}
                 required
-                error={!!profileData.viewerPassword && profileData.viewerPassword.length < 4}
-                helperText={profileData.viewerPassword && profileData.viewerPassword.length < 4 ? 'Minimum 4 characters' : ''}
               />
             </Grid>
             <Grid item xs={12}>
@@ -264,14 +256,15 @@ export const ProfileForm = ({ profileData, onChange, onSubmit, isNewProfile, onC
           size="small"
           disabled={
             isNewProfile
-              ? !profileData.adminPassword || !profileData.adminConfirmPassword ||
-              !profileData.viewerPassword || !profileData.viewerConfirmPassword ||
-              profileData.adminPassword !== profileData.adminConfirmPassword ||
-              profileData.viewerPassword !== profileData.viewerConfirmPassword ||
-              profileData.adminPassword.length < 4 || profileData.viewerPassword.length < 4
+              ? !profileData.adminPassword ||
+                !profileData.adminConfirmPassword ||
+                !profileData.viewerPassword ||
+                !profileData.viewerConfirmPassword ||
+                profileData.adminPassword !== profileData.adminConfirmPassword ||
+                profileData.viewerPassword !== profileData.viewerConfirmPassword
               : role === 'ADMIN'
-                ? (resetAdmin && (!profileData.newpassword || profileData.newpassword.length < 4)) ||
-                (resetViewer && (!profileData.conformpassword || profileData.conformpassword.length < 4))
+                ? (resetAdmin && !profileData.newpassword) ||
+                  (resetViewer && !profileData.conformpassword)
                 : true
           }
         >

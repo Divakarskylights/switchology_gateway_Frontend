@@ -7,18 +7,18 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import SaveDiagramDialog from '../../features/scada/components/SaveDiagramDialog';
-import ConfirmEditModeDialog from '../../features/scada/components/ConfirmEditModeDialog';
-import ClearDiagramDialog from '../../features/scada/components/ClearDiagramDialog';
+import SaveDiagramDialog from './components/SaveDiagramDialog';
+import ConfirmEditModeDialog from './components/ConfirmEditModeDialog';
+import ClearDiagramDialog from './components/ClearDiagramDialog';
 import SetupPasswordDialog from '../../features/setup/components/SetupPasswordDialog';
 import useActivityLogStore from '../../redux/store/useActivityLogStore';
 import useAdminPasswordStore from '../../redux/store/useAdminPasswordStore';
 import { configInit } from '../../components/layout/globalvariable';
-import { useScadaDataFetching } from '../../hooks/features/scada/useScadaDataFetching';
-import { useScadaDiagramInteractions } from '../../hooks/features/scada/useScadaDiagramInteractions';
-import { useDiagramEditorControls } from '../../hooks/features/scada/useDiagramEditorControls';
-import { DiagramWithDnD } from '../../features/scada/DiagramWithDnD';
-import NodePalette from '../../features/scada/MainPalette';
+import { useScadaDataFetching } from './hooks/useScadaDataFetching';
+import { useScadaDiagramInteractions } from './hooks/useScadaDiagramInteractions';
+import { useDiagramEditorControls } from './hooks/useDiagramEditorControls';
+import { DiagramWithDnD } from './diagram/DiagramWithDnD';
+import NodePalette from './components/MainPalette';
 import useRole from '../../redux/store/useRole';
 
 export function ScadaDiagram() {

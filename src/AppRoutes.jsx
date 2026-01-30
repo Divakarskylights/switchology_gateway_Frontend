@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { CircularProgress, Box, Typography } from "@mui/material";
-import ProfilePage from "./pages/settings/ProfilePage";
-import DashboardPage from "./pages/dashboard/DashboardPage";
-import AnalyticsDashboardPage from "./pages/analytics/AnalyticsDashboardPage";
-import SetupPage from "./pages/settings/SetupPage";
-import AuthKeyPage from "./pages/auth/AuthKeyPage";
-import SubscriptionPage from "./pages/settings/SubscriptionPage";
-import RelaySetupPage from "./pages/relay/RelaySetupPage";
-import { DashboardLayout } from "./layouts/DiagramLayout";
-import ProtectedRoute from "./components/common/ProtectedRoute";
-import { ScadaDiagram } from "./pages/scada/ScadaPage";
-import KpiPage from "./pages/dashboard/KpiPage";
-import LoginPage from "./pages/auth/LoginPage";
-import MetersBillGeneratePage from "./pages/MetersBillGeneratePage";
 import { useAppInitialization } from "./hooks/useAppInitialization";
 import useAuth from "./hooks/useAuth";
-import CommunicationSetupPage from "./features/communicationSetup/pages/CommunicationSetupPage";
+import { getPublicRoutes } from "./routes/publicRoutes";
+import { getGatewayRoutes } from "./routes/gatewayRoutes";
+import { getProtectedRoutes } from "./routes/protectedRoutes";
+import { getAdminRoutes } from "./routes/adminRoutes";
+import { getFallbackRoutes } from "./routes/fallbackRoutes";
 
 const AppRoutes = () => {
-  const { isLoading, hasProfile, roleLoaded } = useAppInitialization();
+  const location = useLocation();
+  const { isLoading, hasProfile, roleLoaded, networkError } = useAppInitialization();
   const { checkGatewayStatus, isLoggedIn } = useAuth();
   const [gatewayStatus, setGatewayStatus] = useState({
     needsAuthentication: false,
@@ -27,6 +19,19 @@ const AppRoutes = () => {
     subscriptionIsActive: true
   });
   const [profileChecked, setProfileChecked] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname !== "/server-issue") {
+      try {
+        sessionStorage.setItem(
+          "lastKnownRoute",
+          `${location.pathname}${location.search || ""}`
+        );
+      } catch (err) {
+        console.warn("Failed to cache last route:", err);
+      }
+    }
+  }, [location]);
 
   // Fetch gateway status
   useEffect(() => {
@@ -38,6 +43,10 @@ const AppRoutes = () => {
     };
     init();
   }, []);
+
+  if (networkError && location.pathname !== "/server-issue") {
+    return <Navigate to="/server-issue" replace state={{ from: location.pathname }} />;
+  }
 
   if (isLoading || !roleLoaded || !profileChecked) {
     return (
@@ -62,102 +71,33 @@ const AppRoutes = () => {
     return "/dashboard";
   };
 
+  const publicRoutes = getPublicRoutes({ isLoggedIn, getDefaultRoute });
+  const gatewayRoutes = getGatewayRoutes();
+  const protectedRoutes = getProtectedRoutes();
+  const adminRoutes = getAdminRoutes();
+  const fallbackRoutes = getFallbackRoutes({ getDefaultRoute });
+
   return (
     <Routes>
-      {/* Public: Login */}
-      <Route
-        path="/auth/login"
-        element={
-          isLoggedIn()
-            ? <Navigate to={getDefaultRoute()} replace />
-            : <LoginPage />
-        }
-      />
+      {publicRoutes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
 
-      {/* Gateway authentication page (requires login, but no profile enforcement) */}
-      <Route
-        path="/gateway/auth"
-        element={
-          <ProtectedRoute enforceProfile={false}>
-            <DashboardLayout component={AuthKeyPage} />
-          </ProtectedRoute>
-        }
-      />
-      
-      {/* Gateway subscription page (requires login, but no profile enforcement) */}
-      <Route
-        path="/gateway/subscription"
-        element={
-          <ProtectedRoute enforceProfile={false}>
-            <DashboardLayout component={SubscriptionPage} />
-          </ProtectedRoute>
-        }
-      />
+      {gatewayRoutes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
 
-      {/* Profile page: allow access without enforcing profile to avoid redirect loop */}
-      <Route
-        path="/user/profile"
-        element={
-          <ProtectedRoute enforceProfile={false}>
-            <DashboardLayout component={ProfilePage} />
-          </ProtectedRoute>
-        }
-      />
+      {protectedRoutes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
 
-      {/* Main app routes */}
-      <Route path="/dashboard" element={
-        <ProtectedRoute>
-          <DashboardLayout component={DashboardPage} />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/analytics/ems" element={
-        <ProtectedRoute>
-          <DashboardLayout component={AnalyticsDashboardPage} />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/analytics/kpi" element={
-        <ProtectedRoute>
-          <DashboardLayout component={KpiPage} />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/scada/diagram" element={
-        <ProtectedRoute>
-          <DashboardLayout component={ScadaDiagram} />
-        </ProtectedRoute>
-      } />
+      {adminRoutes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
 
-      {/* Admin routes */}
-      <Route path="/admin/setup" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <DashboardLayout component={SetupPage} />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/admin/meter-config" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <DashboardLayout component={MetersBillGeneratePage} />
-        </ProtectedRoute>
-      } />
-
-      <Route path="/admin/communication-setup" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <DashboardLayout component={CommunicationSetupPage} />
-        </ProtectedRoute>
-      } />
-
-      {/* <Route path="/admin/relay-setup" element={
-        <ProtectedRoute allowedRoles={['ADMIN']}>
-          <DashboardLayout component={RelaySetupPage} />
-        </ProtectedRoute>
-      } /> */}
-
-      {/* Fallback route */}
-      <Route path="*" element={
-        <Navigate to={getDefaultRoute()} replace />
-      } />
+      {fallbackRoutes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
     </Routes>
   );
 };
